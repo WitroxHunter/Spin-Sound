@@ -1,0 +1,6 @@
+- zrobic hostowanie plikow - album coverow, i wczytujac produkty pobierac je wlasnie z bazy danych, z niej link do hostowanej okladki i voila
+- login/register
+- working cart
+- stripe integration
+- hero section finalizacja
+- logo fajne wymyslec
