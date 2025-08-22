@@ -45,26 +45,31 @@
         <div
           v-for="product in filteredProducts"
           :key="product.id"
-          @click="goToProduct(product)"
           class="bg-[#2A1F1F] cursor-pointer p-4 rounded-xl shadow hover:scale-105 transition transform flex flex-col"
         >
-          <img
-            :src="product.image"
-            :alt="product.name"
-            class="rounded-lg mb-4 w-full h-auto object-cover"
-          />
-          <h3 class="text-xl font-semibold mb-2">{{ product.name }}</h3>
-          <p class="text-gray-400 flex-1">
-            {{ product.artist }} {{ product.description }}
-          </p>
-          <div class="mt-4 flex items-center justify-between">
-            <span class="text-lg font-bold">{{ product.price }}$</span>
-            <button
-              class="px-4 py-2 bg-[#633131] rounded-lg hover:bg-[#7a3b3b] transition"
-            >
-              Add to cart
-            </button>
-          </div>
+          <NuxtLink
+            :to="`/product/${slugify(
+              product.id + '-' + product.name + '-' + product.category
+            )}`"
+          >
+            <img
+              :src="product.image"
+              :alt="product.name"
+              class="rounded-lg mb-4 w-full h-auto object-cover"
+            />
+            <h3 class="text-xl font-semibold mb-2">{{ product.name }}</h3>
+            <p class="text-gray-400 flex-1">
+              {{ product.artist }} {{ product.description }}
+            </p>
+            <div class="mt-4 flex items-center justify-between">
+              <span class="text-lg font-bold">{{ product.price }}$</span>
+              <button
+                class="px-4 py-2 bg-[#633131] rounded-lg hover:bg-[#7a3b3b] transition"
+              >
+                Add to cart
+              </button>
+            </div>
+          </NuxtLink>
         </div>
       </div>
     </section>
@@ -72,15 +77,7 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
 import { ref, computed } from "vue";
-
-const router = useRouter();
-
-const goToProduct = (product) => {
-  const slug = slugify(product.name + "-" + product.category);
-  router.push(`/product/${slug}`);
-};
 
 const slugify = (text) => {
   return text

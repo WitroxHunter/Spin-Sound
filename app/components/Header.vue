@@ -3,7 +3,7 @@
     class="bg-[#633131] text-white p-4 pr-45 flex justify-between items-center fixed top-0 left-0 w-full z-98 h-16"
   >
     <!-- Logo / nazwa -->
-    <h1 class="text-2xl font-bold">Spin'n Sound</h1>
+    <h1 class="text-2xl font-bold"><NuxtLink to="/">Spin'n Sound</NuxtLink></h1>
 
     <!-- Nawigacja -->
     <nav class="flex items-center gap-16">

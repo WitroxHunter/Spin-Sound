@@ -25,3 +25,8 @@ export async function getProducts() {
   console.log("Products retrieved:", products);
   return products;
 }
+
+export async function getProductById(id) {
+  const db = await connectDB();
+  return await db.collection("products").findOne({ id });
+}
