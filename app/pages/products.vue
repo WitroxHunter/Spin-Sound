@@ -45,7 +45,8 @@
         <div
           v-for="product in filteredProducts"
           :key="product.id"
-          class="bg-[#2A1F1F] p-4 rounded-xl shadow hover:scale-105 transition transform flex flex-col"
+          @click="goToProduct(product)"
+          class="bg-[#2A1F1F] cursor-pointer p-4 rounded-xl shadow hover:scale-105 transition transform flex flex-col"
         >
           <img
             :src="product.image"
@@ -71,7 +72,25 @@
 </template>
 
 <script setup>
+import { useRouter } from "vue-router";
 import { ref, computed } from "vue";
+
+const router = useRouter();
+
+const goToProduct = (product) => {
+  const slug = slugify(product.name + "-" + product.category);
+  router.push(`/product/${slug}`);
+};
+
+const slugify = (text) => {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-");
+};
 
 const { data: db_products } = await useFetch("/api/products");
 console.log("Fetched products:", db_products.value);
