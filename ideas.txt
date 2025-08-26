@@ -5,3 +5,4 @@
 - hero section finalizacja
 - logo fajne wymyslec
 - data wydania do kazdego albumu
+- zrobic realistyczny winyl

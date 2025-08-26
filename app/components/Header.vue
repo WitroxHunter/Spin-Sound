@@ -11,9 +11,9 @@
       <NuxtLink to="/products" class="hover:underline">Products</NuxtLink>
       <NuxtLink to="/login" class="hover:underline">Log In</NuxtLink>
       <NuxtLink to="/register" class="hover:underline">Register</NuxtLink>
-
-      <!-- Ikonka koszyka -->
-      <ShoppingCartIcon class="w-6 h-6 cursor-pointer hover:text-gray-300" />
+      <NuxtLink to="/cart" class="hover:underline"
+        ><ShoppingCartIcon class="w-6 h-6 cursor-pointer hover:text-gray-300"
+      /></NuxtLink>
     </nav>
   </header>
 </template>
