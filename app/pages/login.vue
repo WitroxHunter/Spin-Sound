@@ -26,7 +26,7 @@
 
       <!-- Hasło -->
       <div>
-        <label class="block mb-1">Hasło</label>
+        <label class="block mb-1">Password</label>
         <input
           v-model="form.password"
           type="password"
