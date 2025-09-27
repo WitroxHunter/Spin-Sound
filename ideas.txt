@@ -6,3 +6,5 @@
 - logo fajne wymyslec
 - data wydania do kazdego albumu
 - zrobic realistyczny winyl
+
+- logo ze jest pol winylu z lewej i napis spin'n \n sound

@@ -73,25 +73,32 @@
               :key="product.id"
               class="flex-shrink-0 w-80 mr-5 bg-[#3A3A3A] rounded-lg overflow-hidden border border-[#4A4A4A] hover:border-[#633131] transition-all duration-300 hover:transform hover:scale-105"
             >
-              <!-- Product Image - Full width and height -->
-              <div class="w-full h-60 overflow-hidden">
-                <img
-                  :src="product.image || '/placeholder-vinyl.jpg'"
-                  :alt="product.name"
-                  class="w-full h-full object-cover"
-                />
-              </div>
+              <NuxtLink
+                :to="`/product/${slugify(
+                  product.id + '-' + product.name + '-' + product.category
+                )}`"
+              >
+                <!-- Product Image - Full width and height -->
+                <div class="w-full h-60 overflow-hidden">
+                  <img
+                    :src="product.image || '/placeholder-vinyl.jpg'"
+                    :alt="product.name"
+                    class="w-full h-full object-contain"
+                  />
+                </div>
 
-              <!-- Product Details -->
-              <div class="p-6">
-                <h3 class="text-white font-semibold text-lg mb-2">
-                  {{ product.name }} | {{ product.category }}
-                </h3>
-                <p class="text-[#c1c1c1] mb-3">{{ product.artist }}</p>
-                <p class="text-[#633131] font-bold text-xl">
-                  ${{ product.price }}
-                </p>
-              </div>
+                <!-- Product Details -->
+                <div class="p-6">
+                  <h3 class="text-white font-semibold text-lg mb-2">
+                    {{ product.name }} |
+                    <span class="capitalize">{{ product.category }}</span>
+                  </h3>
+                  <p class="text-[#c1c1c1] mb-3">{{ product.artist }}</p>
+                  <p class="text-[#ffffff] font-bold text-xl">
+                    ${{ product.price }}
+                  </p>
+                </div>
+              </NuxtLink>
             </div>
           </div>
 
@@ -101,14 +108,14 @@
             :disabled="currentSlide === 0"
             class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-[#633131] hover:bg-[#582c2c] disabled:bg-[#444] disabled:cursor-not-allowed text-white p-3 rounded-full transition"
           >
-            ←
+            <ChevronLeft />
           </button>
           <button
             @click="nextSlide"
             :disabled="currentSlide >= maxSlides"
             class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-[#633131] hover:bg-[#582c2c] disabled:bg-[#444] disabled:cursor-not-allowed text-white p-3 rounded-full transition"
           >
-            →
+            <ChevronRight />
           </button>
         </div>
 
@@ -122,7 +129,7 @@
             :key="index"
             @click="goToSlide(index)"
             :class="[
-              'w-3 h-3 rounded-full transition-colors',
+              'cursor-pointer w-3 h-3 rounded-full transition-colors',
               currentSlide === index ? 'bg-[#633131]' : 'bg-[#4A4A4A]',
             ]"
           ></button>
@@ -166,6 +173,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
+import { ChevronRight, ChevronLeft } from "lucide-vue-next";
 
 // Fetch products from API
 const { data: db_products } = await useFetch("/api/products");
@@ -240,5 +248,15 @@ const previousSlide = () => {
 
 const goToSlide = (index) => {
   currentSlide.value = index;
+};
+
+const slugify = (text) => {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\-]+/g, "")
+    .replace(/\-\-+/g, "-");
 };
 </script>
