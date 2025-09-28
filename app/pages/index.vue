@@ -152,15 +152,33 @@
           >
             <NuxtLink :to="`/products/${category.link}`">
               <div
-                class="bg-gradient-to-br from-[#633131] to-[#4a2626] rounded-lg p-8 text-center hover:transform hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-[#633131]/20"
+                class="relative aspect-square rounded-lg overflow-hidden border-2 border-[#633131] hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-[#633131]/20"
               >
-                <div class="text-6xl mb-4">{{ category.icon }}</div>
-                <h3 class="text-white font-semibold text-xl mb-2">
-                  {{ category.name }}
-                </h3>
-                <p class="text-[#c1c1c1] mb-4">{{ category.description }}</p>
-                <div class="bg-[#ffffff1a] rounded-lg p-2 text-sm text-white">
-                  {{ category.count }} products
+                <!-- Background image -->
+                <img
+                  :src="`/images/${category.img}`"
+                  :alt="category.name"
+                  class="absolute inset-0 w-full h-full object-cover"
+                />
+
+                <!-- Gradient overlay -->
+                <div
+                  class="absolute inset-0 bg-gradient-to-b from-[#633131]/70 to-[#1d1616]/90"
+                ></div>
+
+                <!-- Text content at the bottom -->
+                <div class="absolute bottom-0 w-full p-4 text-center">
+                  <h3 class="text-white font-semibold text-xl">
+                    {{ category.name }}
+                  </h3>
+                  <p class="text-[#c1c1c1] text-sm mb-2">
+                    {{ category.description }}
+                  </p>
+                  <div
+                    class="bg-[#ffffff1a] rounded-lg p-2 text-xs text-white inline-block"
+                  >
+                    {{ category.count }} products
+                  </div>
                 </div>
               </div>
             </NuxtLink>
@@ -175,10 +193,8 @@
 import { ref, computed } from "vue";
 import { ChevronRight, ChevronLeft } from "lucide-vue-next";
 
-// Fetch products from API
 const { data: db_products } = await useFetch("/api/products");
 
-// Extract products array and filter for IDs 1-5 as popular products
 const allProducts = db_products.value?.products || [];
 const popularProducts = ref(
   allProducts.filter((product) => product.id >= 1 && product.id <= 5)
@@ -187,12 +203,12 @@ const popularProducts = ref(
 console.log("Fetched products:", db_products.value);
 console.log("Popular products:", popularProducts.value);
 
-// Categories data
 const categories = ref([
   {
     id: 1,
     name: "Vinyl Records",
     link: "vinyl",
+    img: "vinyl-cat.jpg",
     icon: "💿",
     description: "Classic and modern vinyl records",
     count: 1247,
@@ -201,6 +217,7 @@ const categories = ref([
     id: 2,
     name: "CDs",
     link: "cd",
+    img: "cd.webp",
     icon: "💽",
     description: "Digital audio compact discs",
     count: 856,
@@ -209,6 +226,7 @@ const categories = ref([
     id: 3,
     name: "Merchandise",
     link: "merch",
+    img: "merch.webp",
     icon: "👕",
     description: "T-shirts, posters & collectibles",
     count: 423,
@@ -217,13 +235,13 @@ const categories = ref([
     id: 4,
     name: "Other Products",
     link: "",
+    img: "gramophone.jpg",
     icon: "🎧",
     description: "Accessories & equipment",
     count: 189,
   },
 ]);
 
-// Carousel functionality
 const currentSlide = ref(0);
 const itemsPerView = 3;
 
