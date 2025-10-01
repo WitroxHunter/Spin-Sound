@@ -66,7 +66,9 @@
         <div v-else class="relative overflow-hidden">
           <div
             class="flex transition-transform duration-500 ease-in-out"
-            :style="{ transform: `translateX(-${currentSlide * 320}px)` }"
+            :style="{
+              transform: `translateX(-${currentSlide * (itemWidth + 20)}px)`,
+            }"
           >
             <div
               v-for="product in popularProducts"
@@ -79,11 +81,11 @@
                 )}`"
               >
                 <!-- Product Image - Full width and height -->
-                <div class="w-full h-60 overflow-hidden">
+                <div class="w-full aspect-square overflow-hidden">
                   <img
                     :src="product.image || '/placeholder-vinyl.jpg'"
                     :alt="product.name"
-                    class="w-full h-full object-contain"
+                    class="w-full h-full object-cover"
                   />
                 </div>
 
@@ -106,14 +108,14 @@
           <button
             @click="previousSlide"
             :disabled="currentSlide === 0"
-            class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-[#633131] hover:bg-[#582c2c] disabled:bg-[#444] disabled:cursor-not-allowed text-white p-3 rounded-full transition"
+            class="cursor-pointer absolute left-0 top-1/2 transform -translate-y-1/2 bg-[#633131] hover:bg-[#582c2c] disabled:bg-[#444] disabled:cursor-not-allowed text-white p-3 rounded-full transition"
           >
             <ChevronLeft />
           </button>
           <button
             @click="nextSlide"
             :disabled="currentSlide >= maxSlides"
-            class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-[#633131] hover:bg-[#582c2c] disabled:bg-[#444] disabled:cursor-not-allowed text-white p-3 rounded-full transition"
+            class="cursor-pointer absolute right-0 top-1/2 transform -translate-y-1/2 bg-[#633131] hover:bg-[#582c2c] disabled:bg-[#444] disabled:cursor-not-allowed text-white p-3 rounded-full transition"
           >
             <ChevronRight />
           </button>
@@ -125,7 +127,9 @@
           class="flex justify-center mt-8 space-x-2"
         >
           <button
-            v-for="(dot, index) in Math.ceil(popularProducts.length / 3)"
+            v-for="(dot, index) in Math.ceil(
+              popularProducts.length / itemsPerView
+            )"
             :key="index"
             @click="goToSlide(index)"
             :class="[
@@ -190,18 +194,8 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { ChevronRight, ChevronLeft } from "lucide-vue-next";
-
-const { data: db_products } = await useFetch("/api/products");
-
-const allProducts = db_products.value?.products || [];
-const popularProducts = ref(
-  allProducts.filter((product) => product.id >= 1 && product.id <= 5)
-);
-
-console.log("Fetched products:", db_products.value);
-console.log("Popular products:", popularProducts.value);
 
 const categories = ref([
   {
@@ -242,39 +236,69 @@ const categories = ref([
   },
 ]);
 
-const currentSlide = ref(0);
-const itemsPerView = 3;
+const { data: db_products } = await useFetch("/api/products");
 
+const allProducts = db_products.value?.products || [];
+const popularProducts = ref(
+  allProducts.filter((product) => product.id >= 1 && product.id <= 8) // więcej, żeby było co przesuwać
+);
+
+const currentSlide = ref(0);
+const itemsPerView = ref(1); // domyślnie 1 (na mobile)
+const itemWidth = 320; // szerokość karty w px (dostosuj do designu)
+
+// Funkcja ustalająca ilość produktów na ekran w zależności od width
+const updateItemsPerView = () => {
+  const width = window.innerWidth;
+  if (width < 640) {
+    itemsPerView.value = 1; // telefony
+  } else if (width < 1024) {
+    itemsPerView.value = 2; // tablety
+  } else if (width < 1440) {
+    itemsPerView.value = 3; // mniejsze laptopy
+  } else {
+    itemsPerView.value = 5; // duże ekrany
+  }
+};
+
+// obliczanie max slajdów
 const maxSlides = computed(() => {
   return Math.max(
     0,
-    Math.ceil(popularProducts.value.length / itemsPerView) - 1
+    Math.ceil(popularProducts.value.length / itemsPerView.value) - 1
   );
 });
 
+// przesuwanie karuzeli
 const nextSlide = () => {
   if (currentSlide.value < maxSlides.value) {
     currentSlide.value++;
   }
 };
-
 const previousSlide = () => {
   if (currentSlide.value > 0) {
     currentSlide.value--;
   }
 };
-
 const goToSlide = (index) => {
   currentSlide.value = index;
 };
 
-const slugify = (text) => {
-  return text
+// listener resize
+onMounted(() => {
+  updateItemsPerView();
+  window.addEventListener("resize", updateItemsPerView);
+});
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", updateItemsPerView);
+});
+
+const slugify = (text) =>
+  text
     .toString()
     .toLowerCase()
     .trim()
     .replace(/\s+/g, "-")
     .replace(/[^\w\-]+/g, "")
     .replace(/\-\-+/g, "-");
-};
 </script>
