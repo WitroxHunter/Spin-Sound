@@ -410,7 +410,7 @@ const komunikat = ref("");
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 
-// Validation function
+// Walidacja
 const validate = () => {
   errors.email = "";
   errors.password = "";
@@ -447,15 +447,31 @@ const validate = () => {
   return valid;
 };
 
-// Submit handler
-const onSubmit = () => {
+// Submit handler z połączeniem do backendu
+const onSubmit = async () => {
   if (!validate()) return;
 
-  console.log("Registration data:", form);
-  komunikat.value = "✅ Account created successfully!";
+  try {
+    const res = await $fetch("/api/auth/register", {
+      method: "POST",
+      body: {
+        email: form.email,
+        password: form.password,
+      },
+    });
 
-  setTimeout(() => {
-    window.location.href = "/login";
-  }, 1500);
+    // zakładam, że backend zwraca { success: true } lub { error: "message" }
+    if (res.error) {
+      komunikat.value = "❌ " + res.error;
+    } else {
+      komunikat.value = "✅ Account created successfully!";
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 1500);
+    }
+  } catch (err) {
+    console.error(err);
+    komunikat.value = "❌ " + (err.message || "Registration failed");
+  }
 };
 </script>

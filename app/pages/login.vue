@@ -6,15 +6,15 @@
       <!-- Header -->
       <div class="text-center mb-8">
         <h1 class="text-5xl font-bold mb-3">Log in</h1>
-        <p class="text-[#c1c1c1]">Join Spin'n Sound to start shopping</p>
+        <p class="text-[#c1c1c1]">Welcome back to Spin'n Sound</p>
       </div>
 
-      <!-- Register Form -->
+      <!-- Login Form -->
       <form
         @submit.prevent="onSubmit"
         class="bg-[#2A2A2A] p-8 rounded-lg border-2 border-[#4A4A4A] hover:border-[#633131] transition-all duration-300 shadow-2xl"
       >
-        <!-- Success/Error Message -->
+        <!-- Message -->
         <div
           v-if="komunikat"
           :class="[
@@ -24,39 +24,6 @@
               : 'bg-red-900/30 border border-red-700',
           ]"
         >
-          <svg
-            v-if="komunikat.includes('✅')"
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="text-green-400 flex-shrink-0 mt-0.5"
-          >
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-            <polyline points="22 4 12 14.01 9 11.01" />
-          </svg>
-          <svg
-            v-else
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="text-red-400 flex-shrink-0 mt-0.5"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <line x1="12" x2="12" y1="8" y2="12" />
-            <line x1="12" x2="12.01" y1="16" y2="16" />
-          </svg>
           <span
             :class="
               komunikat.includes('✅') ? 'text-green-200' : 'text-red-200'
@@ -89,7 +56,6 @@
             v-if="errors.email"
             class="text-red-400 text-sm mt-2 flex items-center gap-1"
           >
-            <Lock class="w-5 h-5 text-[#888]" />
             {{ errors.email }}
           </p>
         </div>
@@ -103,21 +69,7 @@
             <div
               class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="text-[#888]"
-              >
-                <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
+              <Lock class="w-5 h-5 text-[#888]" />
             </div>
             <input
               v-model="form.password"
@@ -139,21 +91,6 @@
             v-if="errors.password"
             class="text-red-400 text-sm mt-2 flex items-center gap-1"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" x2="12" y1="8" y2="12" />
-              <line x1="12" x2="12.01" y1="16" y2="16" />
-            </svg>
             {{ errors.password }}
           </p>
         </div>
@@ -166,12 +103,12 @@
           Log in
         </button>
 
-        <!-- Login Link -->
+        <!-- Register Link -->
         <div class="mt-6 text-center">
           <p class="text-[#c1c1c1] text-sm">
-            Don't have an account?
+            Don’t have an account?
             <NuxtLink
-              to="/login"
+              to="/register"
               class="text-[#633131] hover:underline font-medium"
             >
               Sign up
@@ -190,67 +127,76 @@ import { Mail, Lock, Eye, EyeOff } from "lucide-vue-next";
 const form = reactive({
   email: "",
   password: "",
-  confirmPassword: "",
-  agreeToTerms: false,
 });
 
 const errors = reactive({
   email: "",
   password: "",
-  confirmPassword: "",
-  agreeToTerms: "",
 });
 
 const komunikat = ref("");
 const showPassword = ref(false);
-const showConfirmPassword = ref(false);
 
-// Validation function
 const validate = () => {
   errors.email = "";
   errors.password = "";
-  errors.confirmPassword = "";
-  errors.agreeToTerms = "";
   let valid = true;
 
   if (!form.email) {
     errors.email = "Email is required";
     valid = false;
   } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
-    errors.email = "Please enter a valid email address";
+    errors.email = "Please enter a valid email";
     valid = false;
   }
 
   if (!form.password) {
     errors.password = "Password is required";
     valid = false;
-  } else if (form.password.length < 6) {
-    errors.password = "Password must be at least 6 characters";
-    valid = false;
-  }
-
-  if (form.confirmPassword !== form.password) {
-    errors.confirmPassword = "Passwords do not match";
-    valid = false;
-  }
-
-  if (!form.agreeToTerms) {
-    errors.agreeToTerms = "You must agree to the terms";
-    valid = false;
   }
 
   return valid;
 };
 
-// Submit handler
-const onSubmit = () => {
+import { useCookie } from "#app";
+
+const onSubmit = async () => {
   if (!validate()) return;
 
-  console.log("Registration data:", form);
-  komunikat.value = "✅ Account created successfully!";
+  try {
+    const res = await $fetch("/api/auth/login", {
+      method: "POST",
+      body: {
+        email: form.email,
+        password: form.password,
+      },
+    });
 
-  setTimeout(() => {
-    window.location.href = "/login";
-  }, 1500);
+    if (res.error) {
+      komunikat.value = "❌ " + res.error;
+    } else {
+      komunikat.value = "✅ Login successful!";
+
+      // 🔒 zapisz token w cookie (widoczny po stronie SSR)
+      const token = useCookie("auth_token", {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7, // 7 dni
+        sameSite: "strict",
+        secure: true,
+      });
+      token.value = res.token;
+
+      // zapisz też dane użytkownika, jeśli chcesz
+      const user = useCookie("user");
+      user.value = JSON.stringify(res.user);
+
+      setTimeout(() => {
+        navigateTo("/"); // lepsze niż window.location.href
+      }, 1000);
+    }
+  } catch (err) {
+    console.error(err);
+    komunikat.value = "❌ Login failed";
+  }
 };
 </script>
