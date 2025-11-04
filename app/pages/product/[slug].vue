@@ -31,6 +31,28 @@ const decreaseQuantity = () => {
 };
 
 const addToCart = () => {
+  fetch("/api/cart", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      productId: product.value.id,
+      quantity: quantity.value,
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Product added to cart:", data);
+    })
+    .catch((error) => {
+      console.error("There was a problem with the fetch operation:", error);
+    });
   // Add to cart logic here
   console.log(`Added ${quantity.value} of ${product.value.name} to cart`);
 };
