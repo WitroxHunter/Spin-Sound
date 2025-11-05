@@ -1,10 +1,9 @@
-import { MongoClient } from "mongodb";
 import bcrypt from "bcrypt";
+import { connectDB } from "../../utils/mongodb";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const client = await MongoClient.connect(process.env.MONGO_URI!);
-  const db = client.db("spinnsound");
+  const db = await connectDB();
 
   const existingUser = await db
     .collection("users")
@@ -17,6 +16,8 @@ export default defineEventHandler(async (event) => {
     passwordHash,
     name: body.name || null,
     role: "customer",
+    cart: [],
+    favorites: [],
   });
 
   return { success: true, userId: result.insertedId };

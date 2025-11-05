@@ -1,11 +1,10 @@
-import { MongoClient } from "mongodb";
+import { connectDB } from "../../utils/mongodb";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const client = await MongoClient.connect(process.env.MONGO_URI!);
-  const db = client.db("spinnsound");
+  const db = await connectDB();
 
   const user = await db.collection("users").findOne({ email: body.email });
   if (!user) return { error: "Invalid credentials" };
@@ -22,6 +21,10 @@ export default defineEventHandler(async (event) => {
   return {
     success: true,
     token,
-    user: { email: user.email, name: user.name, role: user.role },
+    user: {
+      email: user.email,
+      name: user.name,
+      role: user.role,
+    },
   };
 });

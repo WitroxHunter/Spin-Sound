@@ -1,4 +1,3 @@
-// /app/server/utils/mongodb.js
 import { MongoClient, ServerApiVersion } from "mongodb";
 
 const uri = process.env.MONGO_URI;
@@ -11,7 +10,7 @@ const client = new MongoClient(uri, {
   },
 });
 
-async function connectDB() {
+export async function connectDB() {
   if (!client.topology?.isConnected()) {
     await client.connect();
   }

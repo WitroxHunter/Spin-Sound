@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken";
 export default defineEventHandler(async (event) => {
   try {
     const db = await connectDB();
-    const body = await readBody(event);
 
+    // 🔐 Pobierz token z nagłówka Authorization
     const authHeader = getHeader(event, "authorization");
     if (!authHeader) {
       throw createError({ statusCode: 401, statusMessage: "Missing token" });
@@ -19,39 +19,16 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 403, statusMessage: "Invalid token" });
     }
 
-    const user = await db.collection("users").findOne({ email: decoded.email });
-    if (!user) {
-      throw createError({ statusCode: 404, statusMessage: "User not found" });
-    }
-
-    const existingItem = user.cart.find((item) => item.id === body.product.id);
-
-    if (existingItem) {
-      await db
-        .collection("users")
-        .updateOne(
-          { email: decoded.email, "cart.id": body.product.id },
-          { $inc: { "cart.$.quantity": 1 } }
-        );
-    } else {
-      await db
-        .collection("users")
-        .updateOne(
-          { email: decoded.email },
-          { $push: { cart: { ...body.product, quantity: 1 } } }
-        );
-    }
-
-    const updatedUser = await db
+    const user = await db
       .collection("users")
       .findOne({ email: decoded.email }, { projection: { cart: 1, _id: 0 } });
 
     return {
       success: true,
-      cart: updatedUser.cart,
+      cart: user.cart || [],
     };
   } catch (err) {
-    console.error("Cart error:", err);
+    console.error("Cart GET error:", err);
     throw createError({
       statusCode: err.statusCode || 500,
       statusMessage: err.statusMessage || "Server error",

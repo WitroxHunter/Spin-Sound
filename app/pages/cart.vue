@@ -209,40 +209,24 @@ import { ref, computed } from "vue";
 import { loadStripe } from "@stripe/stripe-js";
 import { ShoppingCartIcon, Trash } from "lucide-vue-next";
 
+const token = useCookie("auth_token");
+
+const { data, error } = await useFetch("/api/cart", {
+  headers: {
+    Authorization: `Bearer ${token.value}`,
+  },
+});
+
+if (error.value) {
+  console.error("Cart fetch failed:", error.value);
+} else {
+  console.log("Cart items:", data.value.cart);
+}
+
 const stripePromise = loadStripe(
   import.meta.env.NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
-
-// Sample cart data - Replace with your actual cart state management
-const cartItems = ref([
-  {
-    id: 1,
-    name: "Dark Side of the Moon",
-    artist: "Pink Floyd",
-    category: "vinyl",
-    price: 29.99,
-    quantity: 1,
-    image: "/images/pink-floyd.jpg",
-  },
-  {
-    id: 2,
-    name: "Abbey Road",
-    artist: "The Beatles",
-    category: "vinyl",
-    price: 34.99,
-    quantity: 2,
-    image: "/images/beatles.jpg",
-  },
-  {
-    id: 3,
-    name: "Thriller",
-    artist: "Michael Jackson",
-    category: "cd",
-    price: 19.99,
-    quantity: 1,
-    image: "/images/thriller.jpg",
-  },
-]);
+const cartItems = ref(data.value ? data.value.cart : []);
 
 const promoCode = ref("");
 

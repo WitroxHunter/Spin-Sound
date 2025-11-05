@@ -7,6 +7,7 @@ const route = useRoute();
 const slug = route.params.slug;
 const id = slug.split("-")[0];
 const { data: product } = await useFetch(`/api/product/${id}`);
+const token = useCookie("auth_token");
 
 // Reactive state
 const quantity = ref(1);
@@ -30,32 +31,24 @@ const decreaseQuantity = () => {
   }
 };
 
-const addToCart = () => {
-  fetch("/api/cart", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      productId: product.value.id,
-      quantity: quantity.value,
-    }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log("Product added to cart:", data);
-    })
-    .catch((error) => {
-      console.error("There was a problem with the fetch operation:", error);
+async function addToCart() {
+  try {
+    const res = await $fetch("/api/cart", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
+      body: {
+        product: product.value, // zamiast productId
+        quantity: quantity.value,
+      },
     });
-  // Add to cart logic here
-  console.log(`Added ${quantity.value} of ${product.value.name} to cart`);
-};
+
+    console.log("Product added to cart:", res);
+  } catch (error) {
+    console.error("Cart add error:", error);
+  }
+}
 
 const buyNow = () => {
   // Direct purchase logic here
