@@ -24,22 +24,57 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 404, statusMessage: "User not found" });
     }
 
-    const existingItem = user.cart.find((item) => item.id === body.product.id);
-
-    if (existingItem) {
-      await db
-        .collection("users")
-        .updateOne(
-          { email: decoded.email, "cart.id": body.product.id },
-          { $inc: { "cart.$.quantity": 1 } }
-        );
-    } else {
+    if (body.action === "remove") {
       await db
         .collection("users")
         .updateOne(
           { email: decoded.email },
-          { $push: { cart: { ...body.product, quantity: 1 } } }
+          { $pull: { cart: { id: body.product.id } } }
         );
+    } else if (body.action === "decrement") {
+      const existingItem = user.cart.find((i) => i.id === body.product.id);
+      if (!existingItem) {
+        throw createError({
+          statusCode: 404,
+          statusMessage: "Product not in cart",
+        });
+      }
+
+      if (existingItem.quantity > 1) {
+        await db
+          .collection("users")
+          .updateOne(
+            { email: decoded.email, "cart.id": body.product.id },
+            { $inc: { "cart.$.quantity": -1 } }
+          );
+      } else {
+        await db
+          .collection("users")
+          .updateOne(
+            { email: decoded.email },
+            { $pull: { cart: { id: body.product.id } } }
+          );
+      }
+    } else {
+      const existingItem = user.cart.find(
+        (item) => item.id === body.product.id
+      );
+
+      if (existingItem) {
+        await db
+          .collection("users")
+          .updateOne(
+            { email: decoded.email, "cart.id": body.product.id },
+            { $inc: { "cart.$.quantity": 1 } }
+          );
+      } else {
+        await db
+          .collection("users")
+          .updateOne(
+            { email: decoded.email },
+            { $push: { cart: { ...body.product, quantity: 1 } } }
+          );
+      }
     }
 
     const updatedUser = await db

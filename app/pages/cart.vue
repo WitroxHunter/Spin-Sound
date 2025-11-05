@@ -205,87 +205,91 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { loadStripe } from "@stripe/stripe-js";
 import { ShoppingCartIcon, Trash } from "lucide-vue-next";
+import { useCart } from "#imports";
 
+const { fetchCart, removeFromCart, decrementItem, addToCart } = useCart();
 const token = useCookie("auth_token");
 
-const { data, error } = await useFetch("/api/cart", {
-  headers: {
-    Authorization: `Bearer ${token.value}`,
-  },
+// Loading cart items
+const cartItems = ref([]);
+
+onMounted(async () => {
+  try {
+    cartItems.value = await fetchCart();
+    console.log("Cart items loaded:", cartItems.value);
+  } catch (err) {
+    console.error("Cart fetch failed:", err);
+  }
 });
 
-if (error.value) {
-  console.error("Cart fetch failed:", error.value);
-} else {
-  console.log("Cart items:", data.value.cart);
+// Calculations
+const promoCode = ref("");
+
+const totalItems = computed(() =>
+  cartItems.value.reduce((sum, item) => sum + item.quantity, 0)
+);
+
+const subtotal = computed(() =>
+  cartItems.value.reduce((sum, item) => sum + item.price * item.quantity, 0)
+);
+
+const shipping = computed(() => (subtotal.value > 50 ? 0 : 5.99));
+const tax = computed(() => subtotal.value * 0.08);
+const total = computed(() => subtotal.value + shipping.value + tax.value);
+
+// Cart actions
+// Remove
+async function removeItem(id) {
+  try {
+    await removeFromCart(id);
+    cartItems.value = cartItems.value.filter((i) => i.id !== id);
+  } catch (err) {
+    console.error("Remove item failed:", err);
+  }
 }
 
+// Increment
+async function incrementQuantity(id) {
+  const item = cartItems.value.find((item) => item.id === id);
+  if (item) item.quantity++;
+  try {
+    await addToCart(item, 1);
+  } catch (err) {
+    console.error("Increment failed:", err);
+  }
+}
+
+// Decrement
+async function decrementQuantity(id) {
+  const item = cartItems.value.find((i) => i.id === id);
+  if (!item) return;
+
+  try {
+    await decrementItem(id);
+    if (item.quantity > 1) item.quantity--;
+    else cartItems.value = cartItems.value.filter((i) => i.id !== id);
+  } catch (err) {
+    console.error("Decrement failed:", err);
+  }
+}
+
+// Promo
+function applyPromo() {
+  if (promoCode.value) {
+    alert(`Promo code "${promoCode.value}" applied!`);
+  }
+}
+
+// Checkout
 const stripePromise = loadStripe(
   import.meta.env.NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 );
-const cartItems = ref(data.value ? data.value.cart : []);
 
-const promoCode = ref("");
-
-// Computed values
-const totalItems = computed(() => {
-  return cartItems.value.reduce((sum, item) => sum + item.quantity, 0);
-});
-
-const subtotal = computed(() => {
-  return cartItems.value.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-});
-
-const shipping = computed(() => {
-  return subtotal.value > 50 ? 0 : 5.99;
-});
-
-const tax = computed(() => {
-  return subtotal.value * 0.08; // 8% tax
-});
-
-const total = computed(() => {
-  return subtotal.value + shipping.value + tax.value;
-});
-
-// Cart actions
-const removeItem = (id) => {
-  const index = cartItems.value.findIndex((item) => item.id === id);
-  if (index > -1) {
-    cartItems.value.splice(index, 1);
-  }
-};
-
-const incrementQuantity = (id) => {
-  const item = cartItems.value.find((item) => item.id === id);
-  if (item) {
-    item.quantity++;
-  }
-};
-
-const decrementQuantity = (id) => {
-  const item = cartItems.value.find((item) => item.id === id);
-  if (item && item.quantity > 1) {
-    item.quantity--;
-  }
-};
-
-const applyPromo = () => {
-  if (promoCode.value) {
-    alert(`Promo code "${promoCode.value}" applied!`);
-    // Add your promo code logic here
-  }
-};
-
-const proceedToCheckout = async () => {
+async function proceedToCheckout() {
   try {
-    // Send all cart items to checkout
     const { id } = await $fetch("/api/checkout", {
       method: "POST",
       body: {
@@ -296,9 +300,9 @@ const proceedToCheckout = async () => {
 
     const stripe = await stripePromise;
     await stripe.redirectToCheckout({ sessionId: id });
-  } catch (error) {
-    console.error("Checkout error:", error);
+  } catch (err) {
+    console.error("Checkout error:", err);
     alert("There was an error processing your checkout. Please try again.");
   }
-};
+}
 </script>
