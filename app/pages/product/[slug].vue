@@ -2,12 +2,15 @@
 import { useRoute } from "vue-router";
 import { ref } from "vue";
 import { ShoppingCart, Heart, Share2, ArrowLeft, Star } from "lucide-vue-next";
+import { useCart } from "~/composables/useCart";
+import Popup from "~/components/Popup.vue";
 
 const route = useRoute();
 const slug = route.params.slug;
 const id = slug.split("-")[0];
 const { data: product } = await useFetch(`/api/product/${id}`);
 const token = useCookie("auth_token");
+const { addToCart } = useCart();
 
 // Reactive state
 const quantity = ref(1);
@@ -31,25 +34,6 @@ const decreaseQuantity = () => {
   }
 };
 
-async function addToCart() {
-  try {
-    const res = await $fetch("/api/cart", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token.value}`,
-      },
-      body: {
-        product: product.value, // zamiast productId
-        quantity: quantity.value,
-      },
-    });
-
-    console.log("Product added to cart:", res);
-  } catch (error) {
-    console.error("Cart add error:", error);
-  }
-}
-
 const buyNow = () => {
   // Direct purchase logic here
   console.log(`Buying ${quantity.value} of ${product.value.name} now`);
@@ -68,6 +52,15 @@ const shareProduct = () => {
       url: window.location.href,
     });
   }
+};
+
+const showPopup = ref(false);
+const popupMessage = ref("");
+
+const handleAddToCart = (product, quantity) => {
+  addToCart(product, quantity);
+  popupMessage.value = `✅ ${product.name} added to cart!`;
+  showPopup.value = true;
 };
 </script>
 
@@ -206,7 +199,7 @@ const shareProduct = () => {
           <!-- Action Buttons -->
           <div class="flex flex-col sm:flex-row gap-4">
             <button
-              @click="addToCart"
+              @click="handleAddToCart(product, quantity)"
               class="flex-1 bg-[#633131] hover:bg-[#582c2c] text-white px-8 py-4 rounded-lg font-semibold transition flex items-center justify-center gap-2"
             >
               <ShoppingCart class="w-5 h-5" />
@@ -344,4 +337,5 @@ const shareProduct = () => {
       </div>
     </div>
   </div>
+  <Popup :message="popupMessage" :show="showPopup" @close="showPopup = false" />
 </template>

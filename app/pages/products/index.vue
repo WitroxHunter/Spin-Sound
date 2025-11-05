@@ -76,7 +76,7 @@
         <div
           v-for="product in paginatedProducts"
           :key="product.id"
-          class="bg-[#2A1F1F] cursor-pointer p-4 rounded-xl shadow hover:scale-105 transition transform flex flex-col"
+          class="relative bg-[#2A1F1F] cursor-pointer p-4 rounded-xl shadow hover:scale-105 transition transform flex flex-col"
         >
           <NuxtLink
             :to="`/product/${slugify(
@@ -92,15 +92,15 @@
             <p class="text-gray-400 flex-1">
               {{ product.artist }} {{ product.description }}
             </p>
-            <div class="mt-4 flex items-center justify-between">
-              <span class="text-lg font-bold">{{ product.price }}$</span>
-              <button
-                class="px-4 py-2 bg-[#633131] rounded-lg hover:bg-[#7a3b3b] transition"
-              >
-                Add to cart
-              </button>
-            </div>
+            <span class="text-lg font-bold">{{ product.price }}$</span>
           </NuxtLink>
+
+          <button
+            @click="addToCart(product, 1)"
+            class="absolute bottom-4 right-4 px-4 py-2 bg-[#633131] rounded-lg hover:bg-[#7a3b3b] transition"
+          >
+            Add to cart
+          </button>
         </div>
       </div>
 
@@ -147,6 +147,9 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from "vue";
+import { useCart } from "#imports";
+
+const { addToCart } = useCart();
 
 const route = useRoute();
 
