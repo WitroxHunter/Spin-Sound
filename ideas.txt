@@ -1,8 +1,11 @@
-- zrobic hostowanie plikow - album coverow, i wczytujac produkty pobierac je wlasnie z bazy danych, z niej link do hostowanej okladki i voila
-- login/register
-- working cart
+✅ - zrobic hostowanie plikow - album coverow, i wczytujac produkty pobierac je wlasnie z bazy danych, z niej link do hostowanej okladki i voila
+✅ - login/register
+✅ - working cart
+- LOADING SPINNER KIEDY SIE POBIERAJA ITEMKI W CARTCIE (koszyku)
+- responsive ui
 - stripe integration
-- hero section finalizacja
+- zrobic zeby igla nie wystawala, poprawki do frątu
+🔵 - hero section finalizacja
 - logo fajne wymyslec
 - data wydania do kazdego albumu
 - zrobic realistyczny winyl
