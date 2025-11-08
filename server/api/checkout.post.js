@@ -1,31 +1,44 @@
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2025-07-30",
-});
-
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: body.product.name,
-            images: [body.product.image],
-          },
-          unit_amount: Math.round(body.product.price * 100), // w centach
-        },
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    success_url: "http://localhost:3000/success",
-    cancel_url: "http://localhost:3000/cancel",
-  });
+  // inicjalizacja stripe z kluczem secret
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-  return { id: session.id };
+  try {
+    // przygotowanie danych produktów do Stripe
+    const lineItems = body.products.map((item) => ({
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: item.name,
+          images: item.image ? [item.image] : [],
+        },
+        unit_amount: Math.round(item.price * 100), // cena w centach
+      },
+      quantity: item.quantity,
+    }));
+
+    const baseUrl =
+      process.env.BASE_URL ||
+      process.env.NUXT_PUBLIC_BASE_URL ||
+      "http://localhost:3000";
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: lineItems,
+      mode: "payment",
+      success_url: `${baseUrl}/success`,
+      cancel_url: `${baseUrl}/cart`,
+    });
+
+    return { id: session.id };
+  } catch (error) {
+    console.error("Stripe checkout error:", error);
+    throw createError({
+      statusCode: 500,
+      message: "Error creating checkout session",
+    });
+  }
 });

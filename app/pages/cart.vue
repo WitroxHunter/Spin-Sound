@@ -283,13 +283,12 @@ function applyPromo() {
   }
 }
 
-// Checkout
-const stripePromise = loadStripe(
-  import.meta.env.NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-);
+const config = useRuntimeConfig();
+const stripePromise = loadStripe(config.public.STRIPE_PUBLISHABLE_KEY);
 
 async function proceedToCheckout() {
   try {
+    console.log("Initiating checkout with items:", cartItems.value);
     const { id } = await $fetch("/api/checkout", {
       method: "POST",
       body: {
@@ -297,7 +296,7 @@ async function proceedToCheckout() {
         total: total.value,
       },
     });
-
+    console.log("Checkout session created with ID:", id);
     const stripe = await stripePromise;
     await stripe.redirectToCheckout({ sessionId: id });
   } catch (err) {
