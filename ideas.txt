@@ -3,7 +3,7 @@
 ✅ - working cart
 - LOADING SPINNER KIEDY SIE POBIERAJA ITEMKI W CARTCIE (koszyku)
 - responsive ui
-- stripe integration
+✅ prawie, jeszcze buy now - stripe integration
 - zrobic zeby igla nie wystawala, poprawki do frątu
 🔵 - hero section finalizacja
 - logo fajne wymyslec
