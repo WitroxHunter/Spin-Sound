@@ -89,10 +89,24 @@
               class="rounded-lg mb-4 w-full h-auto object-cover"
             />
             <h3 class="text-xl font-semibold mb-2">{{ product.name }}</h3>
-            <p class="text-gray-400 flex-1">
-              {{ product.artist }} {{ product.description }}
-            </p>
-            <span class="text-lg font-bold">{{ product.price }}$</span>
+            <div class="block">
+              <span
+                class="text-gray-400 flex-1 px-2 py-1 bg-[#463131] rounded-lg mb-4 mr-1"
+              >
+                {{ product.artist }}
+              </span>
+              <span
+                class="text-gray-400 flex-1 px-2 py-1 bg-[#463131] rounded-lg mb-4"
+              >
+                {{
+                  product.category.charAt(0).toUpperCase() +
+                  product.category.slice(1)
+                }}
+              </span>
+            </div>
+            <span class="text-lg font-bold mt-2 block"
+              >{{ product.price }}$</span
+            >
           </NuxtLink>
 
           <button
@@ -205,12 +219,10 @@ const handleCategoryClick = (category) => {
 };
 
 const handleAllClick = () => {
-  filterCategory("all");
   navigateTo("/products");
 };
 
 const handleMerchClick = () => {
-  filterCategory("merch");
   navigateTo("/products/merch");
 };
 

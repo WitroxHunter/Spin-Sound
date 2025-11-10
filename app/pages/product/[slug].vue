@@ -4,6 +4,7 @@ import { ref } from "vue";
 import { ShoppingCart, Heart, Share2, ArrowLeft, Star } from "lucide-vue-next";
 import { useCart } from "~/composables/useCart";
 import Popup from "~/components/Popup.vue";
+import { loadStripe } from "@stripe/stripe-js";
 
 const route = useRoute();
 const slug = route.params.slug;
@@ -34,11 +35,6 @@ const decreaseQuantity = () => {
   }
 };
 
-const buyNow = () => {
-  // Direct purchase logic here
-  console.log(`Buying ${quantity.value} of ${product.value.name} now`);
-};
-
 const toggleWishlist = () => {
   isWishlisted.value = !isWishlisted.value;
 };
@@ -62,6 +58,32 @@ const handleAddToCart = (product, quantity) => {
   popupMessage.value = `✅ ${product.name} added to cart!`;
   showPopup.value = true;
 };
+
+const config = useRuntimeConfig();
+const stripePromise = loadStripe(config.public.STRIPE_PUBLISHABLE_KEY);
+
+async function proceedToCheckout() {
+  try {
+    const stripe = await stripePromise;
+    const { id } = await $fetch("/api/checkout", {
+      method: "POST",
+      body: {
+        products: [
+          {
+            ...product.value,
+            quantity: quantity.value,
+          },
+        ],
+      },
+    });
+
+    console.log("Checkout session created with ID:", id);
+    await stripe.redirectToCheckout({ sessionId: id });
+  } catch (err) {
+    console.error("Checkout error:", err);
+    alert("There was an error processing your checkout. Please try again.");
+  }
+}
 </script>
 
 <template>
@@ -206,7 +228,7 @@ const handleAddToCart = (product, quantity) => {
               Add to Cart
             </button>
             <button
-              @click="buyNow"
+              @click="proceedToCheckout()"
               class="flex-1 bg-white hover:bg-gray-100 text-[#1D1616] px-8 py-4 rounded-lg font-semibold transition"
             >
               Buy Now
