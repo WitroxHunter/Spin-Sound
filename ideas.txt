@@ -3,6 +3,8 @@
 ✅ - working cart
 - LOADING SPINNER KIEDY SIE POBIERAJA ITEMKI W CARTCIE (koszyku)
 - responsive ui
+- poprawic przyciski 1,2 previous na dole bo to glupio wyglada ze ten nie uzywany jest na ciemno i w ogole rozpiperdolone jest to items per page xdddd
+- naprawic frontend /products i sekcje all na sama gore albo dol, i zrobic ten sidebar schowalny i pozycja sticky lub fixed
 ✅ prawie, jeszcze buy now - stripe integration
 - zrobic zeby igla nie wystawala, poprawki do frątu
 🔵 - hero section finalizacja

@@ -6,6 +6,9 @@ export default defineNuxtConfig({
     },
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
   },
+  routeRules: {
+    "/products": { redirect: "/products/all" },
+  },
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
