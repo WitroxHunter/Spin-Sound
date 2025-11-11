@@ -9,7 +9,6 @@
         <p class="text-[#c1c1c1]">Welcome back to Spin'n Sound</p>
       </div>
 
-      <!-- Login Form -->
       <form
         @submit.prevent="onSubmit"
         class="bg-[#2A2A2A] p-8 rounded-lg border-2 border-[#4A4A4A] hover:border-[#633131] transition-all duration-300 shadow-2xl"
@@ -33,7 +32,7 @@
           </span>
         </div>
 
-        <!-- Email Field -->
+        <!-- Email -->
         <div class="mb-6">
           <label class="block mb-2 text-sm font-medium text-white">
             Email Address
@@ -60,7 +59,7 @@
           </p>
         </div>
 
-        <!-- Password Field -->
+        <!-- Password -->
         <div class="mb-6">
           <label class="block mb-2 text-sm font-medium text-white">
             Password
@@ -95,7 +94,7 @@
           </p>
         </div>
 
-        <!-- Submit Button -->
+        <!-- Submit -->
         <button
           type="submit"
           class="w-full py-3 bg-[#633131] hover:bg-[#582c2c] text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-[#633131]/30 flex items-center justify-center gap-2"
@@ -103,7 +102,7 @@
           Log in
         </button>
 
-        <!-- Register Link -->
+        <!-- Register -->
         <div class="mt-6 text-center">
           <p class="text-[#c1c1c1] text-sm">
             Don’t have an account?
@@ -177,21 +176,19 @@ const onSubmit = async () => {
     } else {
       komunikat.value = "✅ Login successful!";
 
-      // 🔒 zapisz token w cookie (widoczny po stronie SSR)
       const token = useCookie("auth_token", {
         path: "/",
-        maxAge: 60 * 60 * 24 * 7, // 7 dni
+        maxAge: 60 * 60 * 24 * 7,
         sameSite: "strict",
         secure: true,
       });
       token.value = res.token;
 
-      // zapisz też dane użytkownika, jeśli chcesz
       const user = useCookie("user");
       user.value = JSON.stringify(res.user);
 
       setTimeout(() => {
-        navigateTo("/"); // lepsze niż window.location.href
+        navigateTo("/");
       }, 1000);
     }
   } catch (err) {

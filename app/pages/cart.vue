@@ -77,19 +77,7 @@
                         'opacity-50 cursor-not-allowed': item.quantity <= 1,
                       }"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <path d="M5 12h14" />
-                      </svg>
+                      <Minus class="w-4 h-4" />
                     </button>
                     <span class="text-white font-semibold w-8 text-center">{{
                       item.quantity
@@ -98,20 +86,7 @@
                       @click="incrementQuantity(item.id)"
                       class="w-8 h-8 flex items-center justify-center text-white hover:bg-[#4A4A4A] rounded transition"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <path d="M5 12h14" />
-                        <path d="M12 5v14" />
-                      </svg>
+                      <Plus class="w-4 h-4" />
                     </button>
                   </div>
                   <p class="text-2xl font-bold text-white">
@@ -177,20 +152,7 @@
               @click="proceedToCheckout"
               class="w-full py-4 bg-[#633131] hover:bg-[#582c2c] text-white font-semibold rounded-lg transition mb-4 flex items-center justify-center gap-2"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect width="20" height="14" x="2" y="5" rx="2" />
-                <line x1="2" x2="22" y1="10" y2="10" />
-              </svg>
+              <CreditCard class="w-5 h-5" />
               Proceed to Checkout
             </button>
 
@@ -207,7 +169,13 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { loadStripe } from "@stripe/stripe-js";
-import { ShoppingCartIcon, Trash } from "lucide-vue-next";
+import {
+  ShoppingCartIcon,
+  Trash,
+  Minus,
+  Plus,
+  CreditCard,
+} from "lucide-vue-next";
 import { useCart } from "#imports";
 
 const { fetchCart, removeFromCart, decrementItem, addToCart } = useCart();

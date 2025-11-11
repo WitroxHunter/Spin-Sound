@@ -144,7 +144,7 @@
           </NuxtLink>
 
           <button
-            @click="handleAddToCart(product, 1)"
+            @click="addToCart(product, 1)"
             class="absolute bottom-4 right-4 px-4 py-2 bg-[#633131] rounded-lg hover:bg-[#7a3b3b] transition"
           >
             Add to cart
