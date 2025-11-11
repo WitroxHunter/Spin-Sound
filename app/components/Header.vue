@@ -12,8 +12,8 @@
 
       <!-- Pokazuj logowanie tylko, jeśli NIE zalogowany -->
       <template v-if="!isLoggedIn">
-        <NuxtLink to="/login" class="hover:underline">Log In</NuxtLink>
-        <NuxtLink to="/register" class="hover:underline">Register</NuxtLink>
+        <NuxtLink to="/login" class="hover:underline">Log in</NuxtLink>
+        <NuxtLink to="/register" class="hover:underline">Sign up</NuxtLink>
       </template>
 
       <!-- Pokazuj wylogowanie tylko, jeśli zalogowany -->

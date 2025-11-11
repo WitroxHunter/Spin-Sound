@@ -20,11 +20,12 @@
             >
               Shop now!
             </button>
-            <button
+            <NuxtLink
+              to="/contact"
               class="cursor-pointer p-4 border-2 border-[#ffffff2d] bg-[#ffffff0a] rounded-lg hover:bg-[#ffffff26] transition"
             >
               Contact Us
-            </button>
+            </NuxtLink>
           </div>
         </div>
       </div>

@@ -150,11 +150,13 @@
               class="text-sm text-[#c1c1c1] group-hover:text-white transition"
             >
               I agree to the
-              <a href="/terms" class="text-[#633131] hover:underline"
+              <a href="/terms" class="text-[#633131] hover:underline font-bold"
                 >Terms of Service</a
               >
               and
-              <a href="/privacy" class="text-[#633131] hover:underline"
+              <a
+                href="/privacy"
+                class="text-[#633131] hover:underline font-bold"
                 >Privacy Policy</a
               >
             </span>
@@ -182,7 +184,7 @@
             Already have an account?
             <NuxtLink
               to="/login"
-              class="text-[#633131] hover:underline font-medium"
+              class="text-[#633131] hover:underline font-bold"
             >
               Sign in
             </NuxtLink>

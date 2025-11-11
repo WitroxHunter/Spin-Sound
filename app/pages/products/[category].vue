@@ -335,12 +335,12 @@ const sortedProducts = computed(() => {
 });
 
 const totalPages = computed(() => {
-  return Math.ceil(sortedProducts.value.length / itemsPerPage.value);
+  return Math.ceil(sortedProducts.value.length / Number(itemsPerPage.value));
 });
 
 const paginatedProducts = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
+  const start = (currentPage.value - 1) * Number(itemsPerPage.value);
+  const end = start + Number(itemsPerPage.value);
   return sortedProducts.value.slice(start, end);
 });
 
@@ -356,7 +356,6 @@ const visiblePages = computed(() => {
   return pages;
 });
 
-// Initialize from URL params
 onMounted(() => {
   const category = route.params.category;
 
@@ -365,45 +364,17 @@ onMounted(() => {
   if (category && ["vinyl", "cd", "merch"].includes(category)) {
     selectedCategory.value = category;
 
-    // Auto-expand vinyl and cd categories
     if (["vinyl", "cd"].includes(category)) {
       expandedCategory.value = category;
     }
   } else if (!category) {
-    // This is the main /products page
     selectedCategory.value = "all";
   } else {
-    // Invalid category, redirect to all products
     navigateTo("/products");
   }
 });
 
-// Watch for route changes (this is what you're missing!)
-watch(
-  () => route.params.category,
-  (newCategory, oldCategory) => {
-    console.log("Route category changed from", oldCategory, "to", newCategory);
-
-    if (newCategory && ["vinyl", "cd", "merch"].includes(newCategory)) {
-      selectedCategory.value = newCategory;
-
-      // Auto-expand vinyl and cd categories
-      if (["vinyl", "cd"].includes(newCategory)) {
-        expandedCategory.value = newCategory;
-      } else {
-        expandedCategory.value = null;
-      }
-    } else if (!newCategory) {
-      // This is the main /products page
-      selectedCategory.value = "all";
-      expandedCategory.value = null;
-    }
-  },
-  { immediate: true }
-); // immediate: true makes it run on initial load too
-
-// Reset to first page when filters change
-watch([selectedCategory, selectedGenre, sortBy, itemsPerPage], () => {
+watch([itemsPerPage, sortBy, selectedCategory, selectedGenre], () => {
   currentPage.value = 1;
 });
 </script>
