@@ -81,10 +81,9 @@
       <!-- Sorting and Pagination Controls -->
       <div class="flex items-center gap-6 mb-8 p-4 bg-[#2A1F1F] rounded-lg">
         <div class="flex items-center gap-2">
-          <label class="text-sm font-medium">Sort by:</label>
           <select
             v-model="sortBy"
-            class="bg-[#1D1616] border border-[#333] rounded px-3 py-1 text-sm"
+            class="bg-[#1D1616] border border-[#333] rounded-lg px-3 py-1 text-sm"
           >
             <option value="name-asc">Name (A-Z)</option>
             <option value="name-desc">Name (Z-A)</option>
@@ -96,7 +95,7 @@
           <label class="text-sm font-medium">Items per page:</label>
           <select
             v-model="itemsPerPage"
-            class="bg-[#1D1616] border border-[#333] rounded px-3 py-1 text-sm"
+            class="bg-[#1D1616] border border-[#333] rounded-lg px-3 py-1 text-sm"
           >
             <option value="6">6</option>
             <option value="12">12</option>
@@ -124,20 +123,34 @@
             />
             <h3 class="text-xl font-semibold mb-2">{{ product.name }}</h3>
             <div class="block">
+              <!-- ARTIST -->
               <span
                 class="text-gray-400 flex-1 px-2 py-1 bg-[#463131] rounded-lg mb-4 mr-1"
               >
                 {{ product.artist }}
               </span>
+
+              <!-- CATEGORY -->
               <span
-                class="text-gray-400 flex-1 px-2 py-1 bg-[#463131] rounded-lg mb-4"
+                class="text-gray-400 flex-1 px-2 py-1 bg-[#463131] rounded-lg mb-4 mr-1"
               >
                 {{
-                  product.category.charAt(0).toUpperCase() +
-                  product.category.slice(1)
+                  product.category.toLowerCase() === "cd"
+                    ? product.category.toUpperCase()
+                    : product.category.charAt(0).toUpperCase() +
+                      product.category.slice(1)
                 }}
               </span>
+
+              <!-- GENRE  -->
+              <span
+                v-if="product.genre"
+                class="text-gray-400 flex-1 px-2 py-1 bg-[#463131] rounded-lg mb-4"
+              >
+                {{ product.genre }}
+              </span>
             </div>
+
             <span class="text-lg font-bold mt-2 block"
               >{{ product.price }}$</span
             >
@@ -145,7 +158,7 @@
 
           <button
             @click="addToCart(product, 1)"
-            class="absolute bottom-4 right-4 px-4 py-2 bg-[#633131] rounded-lg hover:bg-[#7a3b3b] transition"
+            class="absolute bottom-4 right-4 px-4 py-2 bg-[#633131] rounded-lg hover:bg-[#7a3b3b] transition cursor-pointer"
           >
             Add to cart
           </button>
@@ -223,18 +236,7 @@ const itemsPerPage = ref(12);
 const currentPage = ref(1);
 
 // Available genres
-const genres = ref([
-  "Hip Hop",
-  "Rock",
-  "Jazz",
-  "Pop",
-  "Electronic",
-  "Classical",
-  "R&B",
-  "Country",
-  "Reggae",
-  "Blues",
-]);
+const genres = ref(["Hip Hop", "Rock", "Jazz", "Electronic"]);
 
 const toggleCategory = (category) => {
   if (expandedCategory.value === category) {

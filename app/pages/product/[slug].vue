@@ -222,14 +222,14 @@ async function proceedToCheckout() {
           <div class="flex flex-col sm:flex-row gap-4">
             <button
               @click="handleAddToCart(product, quantity)"
-              class="flex-1 bg-[#633131] hover:bg-[#582c2c] text-white px-8 py-4 rounded-lg font-semibold transition flex items-center justify-center gap-2"
+              class="flex-1 bg-[#633131] hover:bg-[#582c2c] text-white px-8 py-4 rounded-lg font-semibold transition flex items-center justify-center gap-2 cursor-pointer"
             >
               <ShoppingCart class="w-5 h-5" />
               Add to Cart
             </button>
             <button
               @click="proceedToCheckout()"
-              class="flex-1 bg-white hover:bg-gray-100 text-[#1D1616] px-8 py-4 rounded-lg font-semibold transition"
+              class="flex-1 bg-white hover:bg-gray-300 text-[#1D1616] px-8 py-4 rounded-lg font-semibold transition cursor-pointer"
             >
               Buy Now
             </button>

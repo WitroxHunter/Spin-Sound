@@ -1,9 +1,19 @@
 <template>
-  <div class="bg-[#1D1616] min-h-screen">
-    <!-- Main Content -->
+  <div class="bg-[#1D1616] min-h-screen pt-16">
     <div class="max-w-7xl mx-auto px-8 py-12">
-      <!-- Empty Cart State -->
-      <div v-if="cartItems.length === 0" class="text-center py-20">
+      <!-- Loading State -->
+      <div v-if="isLoading" class="text-center py-20">
+        <div
+          class="bg-[#2A2A2A] rounded-lg p-12 border border-[#4A4A4A] max-w-md mx-auto"
+        >
+          <ShoppingCartIcon class="w-16 h-16 mx-auto mb-6 text-[#633131]" />
+          <h2 class="text-2xl font-bold text-white mb-4">Loading...</h2>
+          <p class="text-[#c1c1c1]">Fetching your cart items, please wait.</p>
+        </div>
+      </div>
+
+      <!-- Empty Cart -->
+      <div v-else-if="cartItems.length === 0" class="text-center py-20">
         <div
           class="bg-[#2A2A2A] rounded-lg p-12 border border-[#4A4A4A] max-w-md mx-auto"
         >
@@ -181,8 +191,9 @@ import { useCart } from "#imports";
 const { fetchCart, removeFromCart, decrementItem, addToCart } = useCart();
 const token = useCookie("auth_token");
 
-// Loading cart items
+// Loading cart
 const cartItems = ref([]);
+const isLoading = ref(true);
 
 onMounted(async () => {
   try {
@@ -190,6 +201,8 @@ onMounted(async () => {
     console.log("Cart items loaded:", cartItems.value);
   } catch (err) {
     console.error("Cart fetch failed:", err);
+  } finally {
+    isLoading.value = false;
   }
 });
 
