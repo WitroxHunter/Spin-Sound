@@ -87,23 +87,7 @@ async function proceedToCheckout() {
 </script>
 
 <template>
-  <div class="bg-[#1D1616] min-h-screen text-white">
-    <!-- Navigation Bar -->
-    <nav class="bg-[#2A2A2A] border-b border-[#4A4A4A] p-4">
-      <div class="max-w-7xl mx-auto flex items-center justify-between">
-        <NuxtLink
-          to="/"
-          class="flex items-center gap-2 text-white hover:text-[#633131] transition"
-        >
-          <ArrowLeft class="w-5 h-5" />
-          Back to Shop
-        </NuxtLink>
-        <h1 class="text-2xl font-bold">Spin'n Sound</h1>
-        <div class="w-24"></div>
-        <!-- Spacer for centering -->
-      </div>
-    </nav>
-
+  <div class="bg-[#1D1616] min-h-screen text-white pt-16">
     <div v-if="product" class="max-w-7xl mx-auto px-4 py-8">
       <!-- Breadcrumb -->
       <nav class="text-sm text-[#c1c1c1] mb-8">
