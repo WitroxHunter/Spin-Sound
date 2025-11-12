@@ -56,76 +56,6 @@
       </div>
     </main>
 
-    <!-- Most Popular Products Carousel Section -->
-    <section class="bg-[#2A2A2A] px-4 sm:px-8 py-16">
-      <div class="max-w-7xl mx-auto">
-        <h2 class="text-4xl font-bold text-white text-center mb-12">
-          Most Popular Products
-        </h2>
-
-        <!-- Loading state -->
-        <div v-if="!popularProducts.length" class="text-center text-white">
-          Loading products...
-        </div>
-
-        <!-- Carousel Container -->
-        <div v-else class="relative">
-          <div
-            class="flex space-x-6 scrollbar-hide snap-x snap-mandatory px-2 overflow-x-auto"
-          >
-            <div
-              v-for="product in popularProducts"
-              :key="product.id"
-              class="flex-shrink-0 w-64 sm:w-72 md:w-80 snap-start bg-[#3A3A3A] rounded-lg overflow-hidden border border-[#4A4A4A] transition duration-100 hover:bg-[#363636]"
-            >
-              <NuxtLink
-                :to="`/product/${slugify(
-                  product.id + '-' + product.name + '-' + product.category
-                )}`"
-              >
-                <!-- Product Image -->
-                <div class="w-full aspect-square overflow-hidden">
-                  <img
-                    :src="product.image || '/placeholder-vinyl.jpg'"
-                    :alt="product.name"
-                    class="w-full h-full object-cover"
-                  />
-                </div>
-
-                <!-- Product Details -->
-                <div class="p-4 sm:p-6">
-                  <h3 class="text-white font-semibold text-lg mb-1">
-                    {{ product.name }} |
-                    <span class="capitalize">{{ product.category }}</span>
-                  </h3>
-                  <p class="text-[#c1c1c1] mb-2 text-sm sm:text-base">
-                    {{ product.artist }}
-                  </p>
-                  <p class="text-[#ffffff] font-bold text-lg sm:text-xl">
-                    ${{ product.price }}
-                  </p>
-                </div>
-              </NuxtLink>
-            </div>
-          </div>
-
-          <!-- Optional Navigation Buttons (desktop only) -->
-          <button
-            @click="scrollLeft"
-            class="flex absolute left-0 top-1/2 transform -translate-y-1/2 bg-[#1D1616] hover:bg-[#2c2222] text-white p-3 rounded-full transition cursor-pointer"
-          >
-            <ChevronLeft />
-          </button>
-          <button
-            @click="scrollRight"
-            class="flex absolute right-0 top-1/2 transform -translate-y-1/2 bg-[#1D1616] hover:bg-[#2c2222] text-white p-3 rounded-full transition cursor-pointer"
-          >
-            <ChevronRight />
-          </button>
-        </div>
-      </div>
-    </section>
-
     <!-- Product Categories Section -->
     <!-- Product Categories Section -->
     <section
@@ -138,27 +68,41 @@
 
         <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div
-            v-for="product in paginatedProducts"
-            :key="product?.id || product?._id"
-            v-if="product"
-            class="bg-[#2A1F1F] cursor-pointer p-4 rounded-xl shadow hover:scale-105 transition transform flex flex-col"
+            v-for="category in categories"
+            :key="category.id"
+            class="group cursor-pointer w-full"
           >
-            <NuxtLink
-              v-if="product?.id"
-              :to="`/product/${slugify(
-                product.id + '-' + product.name + '-' + product.category
-              )}`"
-            >
-              <img
-                :src="product.image"
-                :alt="product.name"
-                class="rounded-lg w-full object-cover mb-4"
-              />
-              <h3 class="text-xl font-bold">{{ product.name }}</h3>
-              <p class="text-gray-400">{{ product.artist }}</p>
-              <p class="mt-auto text-lg font-semibold">
-                {{ product.price }} zł
-              </p>
+            <NuxtLink :to="`/products/${category.link}`">
+              <div
+                class="relative w-full aspect-square rounded-lg overflow-hidden border-2 border-[#633131] hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-[#633131]/20"
+              >
+                <!-- Background image -->
+                <img
+                  :src="`/images/${category.img}`"
+                  :alt="category.name"
+                  class="absolute inset-0 w-full h-full object-cover"
+                />
+
+                <!-- Gradient overlay -->
+                <div
+                  class="absolute inset-0 bg-gradient-to-b from-[#633131]/70 to-[#1d1616]/90"
+                ></div>
+
+                <!-- Text content at the bottom -->
+                <div class="absolute bottom-0 w-full p-4 text-center">
+                  <h3 class="text-white font-semibold text-xl">
+                    {{ category.name }}
+                  </h3>
+                  <p class="text-[#c1c1c1] text-sm mb-2">
+                    {{ category.description }}
+                  </p>
+                  <div
+                    class="bg-[#ffffff1a] rounded-lg p-2 text-xs text-white inline-block"
+                  >
+                    {{ category.count }} products
+                  </div>
+                </div>
+              </div>
             </NuxtLink>
           </div>
         </div>
