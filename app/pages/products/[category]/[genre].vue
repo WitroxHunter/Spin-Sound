@@ -109,12 +109,12 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <div
           v-for="product in paginatedProducts"
-          :key="product.id"
+          :key="product?.id"
           class="bg-[#2A1F1F] cursor-pointer p-4 rounded-xl shadow hover:scale-105 transition transform flex flex-col"
         >
           <NuxtLink
             :to="`/product/${slugify(
-              product.id + '-' + product.name + '-' + product.category
+              product?.id + '-' + product.name + '-' + product.category
             )}`"
           >
             <img
