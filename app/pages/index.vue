@@ -56,6 +56,76 @@
       </div>
     </main>
 
+    <!-- Most Popular Products Carousel Section -->
+    <section class="bg-[#2A2A2A] px-4 sm:px-8 py-16">
+      <div class="max-w-7xl mx-auto">
+        <h2 class="text-4xl font-bold text-white text-center mb-12">
+          Most Popular Products
+        </h2>
+
+        <!-- Loading state -->
+        <div v-if="!popularProducts.length" class="text-center text-white">
+          Loading products...
+        </div>
+
+        <!-- Carousel Container -->
+        <div v-else class="relative">
+          <div
+            class="flex space-x-6 scrollbar-hide snap-x snap-mandatory px-2 overflow-x-auto"
+          >
+            <div
+              v-for="product in popularProducts"
+              :key="product.id"
+              class="flex-shrink-0 w-64 sm:w-72 md:w-80 snap-start bg-[#3A3A3A] rounded-lg overflow-hidden border border-[#4A4A4A] transition duration-100 hover:bg-[#363636]"
+            >
+              <NuxtLink
+                :to="`/product/${slugify(
+                  product.id + '-' + product.name + '-' + product.category
+                )}`"
+              >
+                <!-- Product Image -->
+                <div class="w-full aspect-square overflow-hidden">
+                  <img
+                    :src="product.image || '/placeholder-vinyl.jpg'"
+                    :alt="product.name"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+
+                <!-- Product Details -->
+                <div class="p-4 sm:p-6">
+                  <h3 class="text-white font-semibold text-lg mb-1">
+                    {{ product.name }} |
+                    <span class="capitalize">{{ product.category }}</span>
+                  </h3>
+                  <p class="text-[#c1c1c1] mb-2 text-sm sm:text-base">
+                    {{ product.artist }}
+                  </p>
+                  <p class="text-[#ffffff] font-bold text-lg sm:text-xl">
+                    ${{ product.price }}
+                  </p>
+                </div>
+              </NuxtLink>
+            </div>
+          </div>
+
+          <!-- Optional Navigation Buttons (desktop only) -->
+          <button
+            @click="scrollLeft"
+            class="flex absolute left-0 top-1/2 transform -translate-y-1/2 bg-[#1D1616] hover:bg-[#2c2222] text-white p-3 rounded-full transition cursor-pointer"
+          >
+            <ChevronLeft />
+          </button>
+          <button
+            @click="scrollRight"
+            class="flex absolute right-0 top-1/2 transform -translate-y-1/2 bg-[#1D1616] hover:bg-[#2c2222] text-white p-3 rounded-full transition cursor-pointer"
+          >
+            <ChevronRight />
+          </button>
+        </div>
+      </div>
+    </section>
+
     <!-- Product Categories Section -->
     <!-- Product Categories Section -->
     <section
