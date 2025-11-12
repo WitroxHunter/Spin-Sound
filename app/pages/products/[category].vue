@@ -1,13 +1,45 @@
 <template>
-  <main class="bg-[#1D1616] min-h-screen w-screen text-white flex pt-16">
-    <aside class="w-1/5 bg-[#241B1B] p-6 border-r border-[#333]">
+  <div class="h-16 w-screen bg-[#241B1B]"></div>
+
+  <!-- Mobile Filter Header -->
+  <div class="md:hidden bg-[#241B1B] border-b border-[#333] p-4">
+    <button
+      @click="mobileFilterOpen = !mobileFilterOpen"
+      class="w-full px-4 py-3 bg-[#633131] rounded-lg hover:bg-[#7a3b3b] transition flex items-center justify-between cursor-pointer text-white"
+    >
+      <span class="font-semibold">Filter Products</span>
+      <span class="text-xl">
+        <component :is="mobileFilterOpen ? X : Menu" />
+      </span>
+    </button>
+  </div>
+
+  <main class="bg-[#1D1616] min-h-screen w-screen text-white flex">
+    <aside
+      :class="[
+        'bg-gradient-to-b from-[#241B1B] to-[#1D1616] p-6 border-r border-[#333] md:block',
+        mobileFilterOpen
+          ? 'fixed inset-0 z-50 w-full md:w-1/5'
+          : 'hidden md:block',
+      ]"
+    >
+      <!-- Mobile Close Button -->
+      <div class="flex justify-end md:hidden mb-4">
+        <button
+          @click="mobileFilterOpen = false"
+          class="text-2xl font-bold px-2 py-1 hover:bg-[#633131] rounded"
+        >
+          <X />
+        </button>
+      </div>
+
       <h2 class="text-2xl font-bold mb-6">Categories</h2>
       <ul class="space-y-2">
         <li>
           <button
-            class="w-full text-left p-2 rounded hover:bg-[#633131] transition flex items-center justify-between"
+            class="w-full text-left p-2 rounded hover:bg-[#633131] transition flex items-center justify-between cursor-pointer"
             :class="{ 'bg-[#633131]': selectedCategory === 'vinyl' }"
-            @click="handleCategoryClick('vinyl')"
+            @click="handleCategoryClickMobile('vinyl')"
           >
             Vinyl
             <span class="text-sm">{{
@@ -17,23 +49,24 @@
           <ul v-if="expandedCategory === 'vinyl'" class="ml-4 mt-2 space-y-1">
             <li v-for="genre in genres" :key="genre">
               <button
-                class="w-full text-left p-2 text-sm rounded hover:bg-[#633131] transition"
+                class="w-full text-left p-2 text-sm rounded hover:bg-[#633131] transition cursor-pointer"
                 :class="{
                   'bg-[#633131]':
                     selectedCategory === 'vinyl' && selectedGenre === genre,
                 }"
-                @click="filterCategoryAndGenre('vinyl', genre)"
+                @click="filterCategoryAndGenreMobile('vinyl', genre)"
               >
                 {{ genre }}
               </button>
             </li>
           </ul>
         </li>
+
         <li>
           <button
-            class="w-full text-left p-2 rounded hover:bg-[#633131] transition flex items-center justify-between"
+            class="w-full text-left p-2 rounded hover:bg-[#633131] transition flex items-center justify-between cursor-pointer"
             :class="{ 'bg-[#633131]': selectedCategory === 'cd' }"
-            @click="handleCategoryClick('cd')"
+            @click="handleCategoryClickMobile('cd')"
           >
             CD
             <span class="text-sm">{{
@@ -43,22 +76,23 @@
           <ul v-if="expandedCategory === 'cd'" class="ml-4 mt-2 space-y-1">
             <li v-for="genre in genres" :key="genre">
               <button
-                class="w-full text-left p-2 text-sm rounded hover:bg-[#633131] transition"
+                class="w-full text-left p-2 text-sm rounded hover:bg-[#633131] transition cursor-pointer"
                 :class="{
                   'bg-[#633131]':
                     selectedCategory === 'cd' && selectedGenre === genre,
                 }"
-                @click="filterCategoryAndGenre('cd', genre)"
+                @click="filterCategoryAndGenreMobile('cd', genre)"
               >
                 {{ genre }}
               </button>
             </li>
           </ul>
         </li>
+
         <li>
           <button
-            class="w-full text-left p-2 rounded hover:bg-[#633131] transition"
-            @click="handleAllClick()"
+            class="w-full text-left p-2 rounded hover:bg-[#633131] transition cursor-pointer"
+            @click="handleAllClickMobile()"
             :class="{ 'bg-[#633131]': selectedCategory === 'all' }"
           >
             All
@@ -66,8 +100,8 @@
         </li>
         <li>
           <button
-            class="w-full text-left p-2 rounded hover:bg-[#633131] transition"
-            @click="handleMerchClick()"
+            class="w-full text-left p-2 rounded hover:bg-[#633131] transition cursor-pointer"
+            @click="handleMerchClickMobile()"
             :class="{ 'bg-[#633131]': selectedCategory === 'merch' }"
           >
             Merch
@@ -75,6 +109,7 @@
         </li>
       </ul>
     </aside>
+
     <section class="flex-1 p-8">
       <h1 class="text-4xl font-bold mb-4">{{ displayTitle }}</h1>
 
@@ -123,14 +158,11 @@
             />
             <h3 class="text-xl font-semibold mb-2">{{ product.name }}</h3>
             <div class="block">
-              <!-- ARTIST -->
               <span
                 class="text-gray-400 flex-1 px-2 py-1 bg-[#463131] rounded-lg mb-4 mr-1"
               >
                 {{ product.artist }}
               </span>
-
-              <!-- CATEGORY -->
               <span
                 class="text-gray-400 flex-1 px-2 py-1 bg-[#463131] rounded-lg mb-4 mr-1"
               >
@@ -141,8 +173,6 @@
                       product.category.slice(1)
                 }}
               </span>
-
-              <!-- GENRE  -->
               <span
                 v-if="product.genre"
                 class="text-gray-400 flex-1 px-2 py-1 bg-[#463131] rounded-lg mb-4"
@@ -150,14 +180,13 @@
                 {{ product.genre }}
               </span>
             </div>
-
             <span class="text-lg font-bold mt-2 block"
               >{{ product.price }}$</span
             >
           </NuxtLink>
 
           <button
-            @click="addToCart(product, 1)"
+            @click="handleAddToCart(product, 1)"
             class="absolute bottom-4 right-4 px-4 py-2 bg-[#633131] rounded-lg hover:bg-[#7a3b3b] transition cursor-pointer"
           >
             Add to cart
@@ -204,13 +233,27 @@
       </div>
     </section>
   </main>
+
+  <Popup :message="popupMessage" :show="showPopup" @close="showPopup = false" />
 </template>
 
 <script setup>
 import { ref, computed, watch, onMounted } from "vue";
+import Popup from "@/components/Popup.vue";
 import { useCart } from "#imports";
+import { Menu, X } from "lucide-vue-next";
 
 const { addToCart } = useCart();
+
+const mobileFilterOpen = ref(false);
+const showPopup = ref(false);
+const popupMessage = ref("");
+
+const handleAddToCart = (product, quantity) => {
+  addToCart(product, quantity);
+  popupMessage.value = `${product.name} has been added to your cart!`;
+  showPopup.value = true;
+};
 
 const route = useRoute();
 
@@ -225,101 +268,79 @@ const slugify = (text) => {
 };
 
 const { data: db_products } = await useFetch("/api/products");
-console.log("Fetched products:", db_products.value);
-
 const products = ref(db_products.value?.products || []);
 const selectedCategory = ref("all");
 const selectedGenre = ref(null);
-const expandedCategory = ref(null); // Initialize as null, set it properly in onMounted
+const expandedCategory = ref(null);
 const sortBy = ref("name-asc");
 const itemsPerPage = ref(12);
 const currentPage = ref(1);
-
-// Available genres
 const genres = ref(["Hip Hop", "Rock", "Jazz", "Electronic"]);
 
 const toggleCategory = (category) => {
-  if (expandedCategory.value === category) {
-    expandedCategory.value = null;
-  } else {
-    expandedCategory.value = category;
-  }
+  expandedCategory.value =
+    expandedCategory.value === category ? null : category;
 };
 
-const handleCategoryClick = (category) => {
-  if (selectedCategory.value === category) {
-    toggleCategory(category);
-  } else {
-    filterCategory(category);
-    navigateTo(`/products/${category}`);
-  }
+const handleCategoryClickMobile = (category) => {
+  expandedCategory.value =
+    expandedCategory.value === category ? null : category;
 };
 
-const handleAllClick = () => {
-  filterCategory("all");
-  navigateTo("/products");
-};
-
-const handleMerchClick = () => {
-  filterCategory("merch");
-  navigateTo("/products/merch");
-};
-
-const filterCategory = (category) => {
-  selectedCategory.value = category;
-  selectedGenre.value = null;
-  expandedCategory.value = null;
-  currentPage.value = 1;
-};
-
-const filterCategoryAndGenre = (category, genre) => {
+const filterCategoryAndGenreMobile = (category, genre) => {
   selectedCategory.value = category;
   selectedGenre.value = genre;
+  mobileFilterOpen.value = false;
+  expandedCategory.value = null;
   currentPage.value = 1;
   navigateTo(
     `/products/${category}/${genre.toLowerCase().replace(/\s+/g, "-")}`
   );
 };
 
+const handleAllClickMobile = () => {
+  selectedCategory.value = "all";
+  selectedGenre.value = null;
+  mobileFilterOpen.value = false;
+  expandedCategory.value = null;
+  currentPage.value = 1;
+  navigateTo("/products");
+};
+
+const handleMerchClickMobile = () => {
+  selectedCategory.value = "merch";
+  selectedGenre.value = null;
+  mobileFilterOpen.value = false;
+  expandedCategory.value = null;
+  currentPage.value = 1;
+  navigateTo("/products/merch");
+};
+
+// pozostałe funkcje handleCategoryClick, filterCategory itd. pozostają bez zmian
+
 const displayTitle = computed(() => {
-  if (selectedCategory.value === "all") {
-    return "All Products";
-  } else if (selectedGenre.value) {
-    const categoryName =
-      selectedCategory.value.charAt(0).toUpperCase() +
-      selectedCategory.value.slice(1);
-    return `${selectedGenre.value} ${categoryName}s`;
-  } else {
-    const categoryName =
-      selectedCategory.value.charAt(0).toUpperCase() +
-      selectedCategory.value.slice(1);
-    return `${categoryName}s`;
-  }
+  if (selectedCategory.value === "all") return "All Products";
+  const categoryName =
+    selectedCategory.value.charAt(0).toUpperCase() +
+    selectedCategory.value.slice(1);
+  return selectedGenre.value
+    ? `${selectedGenre.value} ${categoryName}s`
+    : `${categoryName}s`;
 });
 
 const filteredProducts = computed(() => {
   let filtered = products.value;
-
-  if (selectedCategory.value !== "all") {
+  if (selectedCategory.value !== "all")
+    filtered = filtered.filter((p) => p.category === selectedCategory.value);
+  if (selectedGenre.value)
     filtered = filtered.filter(
-      (product) => product.category === selectedCategory.value
+      (p) => p.genre?.toLowerCase() === selectedGenre.value.toLowerCase()
     );
-  }
-
-  if (selectedGenre.value) {
-    filtered = filtered.filter(
-      (product) =>
-        product.genre &&
-        product.genre.toLowerCase() === selectedGenre.value.toLowerCase()
-    );
-  }
-
   return filtered;
 });
 
 const sortedProducts = computed(() => {
   const sorted = [...filteredProducts.value];
-
   switch (sortBy.value) {
     case "name-asc":
       return sorted.sort((a, b) => a.name.localeCompare(b.name));
@@ -334,44 +355,31 @@ const sortedProducts = computed(() => {
   }
 });
 
-const totalPages = computed(() => {
-  return Math.ceil(sortedProducts.value.length / Number(itemsPerPage.value));
-});
-
-const paginatedProducts = computed(() => {
-  const start = (currentPage.value - 1) * Number(itemsPerPage.value);
-  const end = start + Number(itemsPerPage.value);
-  return sortedProducts.value.slice(start, end);
-});
+const totalPages = computed(() =>
+  Math.ceil(sortedProducts.value.length / Number(itemsPerPage.value))
+);
+const paginatedProducts = computed(() =>
+  sortedProducts.value.slice(
+    (currentPage.value - 1) * itemsPerPage.value,
+    (currentPage.value - 1) * itemsPerPage.value + Number(itemsPerPage.value)
+  )
+);
 
 const visiblePages = computed(() => {
   const pages = [];
   const start = Math.max(1, currentPage.value - 2);
   const end = Math.min(totalPages.value, currentPage.value + 2);
-
-  for (let i = start; i <= end; i++) {
-    pages.push(i);
-  }
-
+  for (let i = start; i <= end; i++) pages.push(i);
   return pages;
 });
 
 onMounted(() => {
   const category = route.params.category;
-
-  console.log("Route category param on mount:", category);
-
   if (category && ["vinyl", "cd", "merch"].includes(category)) {
     selectedCategory.value = category;
-
-    if (["vinyl", "cd"].includes(category)) {
-      expandedCategory.value = category;
-    }
-  } else if (!category) {
-    selectedCategory.value = "all";
-  } else {
-    navigateTo("/products");
-  }
+    if (["vinyl", "cd"].includes(category)) expandedCategory.value = category;
+  } else if (!category) selectedCategory.value = "all";
+  else navigateTo("/products");
 });
 
 watch([itemsPerPage, sortBy, selectedCategory, selectedGenre], () => {

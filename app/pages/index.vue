@@ -1,58 +1,63 @@
 <template>
   <div>
-    <!-- Hero Section -->
+    <!-- Hero -->
     <main
-      class="bg-[#1D1616] w-screen min-h-screen text-white relative overflow-hidden flex items-center justify-center"
+      class="relative w-full min-h-screen text-white overflow-hidden flex items-center justify-center"
     >
-      <!-- Treść strony (logo + tekst + przyciski) -->
-      <div class="w-2/5 h-screen flex items-center justify-center float-left">
-        <div
-          class="relative text-center flex flex-col items-center justify-center"
-        >
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        class="absolute w-full h-full object-cover"
+      >
+        <source src="@/assets/images/bg1.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      <!-- Overlay -->
+      <div class="absolute inset-0 backdrop-blur-sm bg-[#1a1717]/60"></div>
+
+      <div
+        class="relative z-10 w-full h-screen flex items-center justify-center float-left"
+      >
+        <div class="text-center flex flex-col items-center justify-center">
           <h1 class="text-7xl font-bold mb-4">Spin'n Sound</h1>
-          <p class="text-xl mb-8 text-[#c1c1c1]">
-            Your choice for the best vinyl & CD records.
+          <p class="text-xl mb-4 text-[#d7d7d7] sm:w-2/3">
+            Your choice for the best music related products. Whether its vinyl
+            records, CDs, Merchandise - we've got you covered.
           </p>
-          <!-- Dwa przyciski obok siebie -->
           <div class="flex gap-4">
-            <button
-              class="cursor-pointer py-4 px-8 bg-[#633131] border-[#633131] hover:bg-[#582c2c] border-2 rounded-lg transition"
+            <NuxtLink
+              class="relative overflow-hidden bg-[#241a16] text-white rounded-xl transition-colors flex items-center justify-center px-16 py-4 group"
+              to="/products/all"
+              passHref
             >
-              Shop now!
-            </button>
+              <span
+                class="absolute inset-0 bg-[#1D1616] w-0 group-hover:w-full transition-all duration-300"
+              ></span>
+              <span class="relative font-semibold">Shop now!</span>
+            </NuxtLink>
             <NuxtLink
               to="/contact"
-              class="cursor-pointer p-4 border-2 border-[#ffffff2d] bg-[#ffffff0a] rounded-lg hover:bg-[#ffffff26] transition"
+              class="cursor-pointer py-4 px-8 bg-[#ffffff]/10 rounded-xl hover:bg-[#ffffff26] transition"
             >
               Contact Us
             </NuxtLink>
           </div>
         </div>
       </div>
-      <!-- Vinyl player -->
-      <div class="w-3/5 h-screen float-right relative">
+      <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-30">
         <img
-          src="~/assets/images/vinyl-player.png?url"
-          alt="Vinyl"
-          class="absolute top-0 right-0 h-[100vh] w-auto pointer-events-none transform z-20"
-        />
-        <!-- Igła -->
-        <img
-          src="~/assets/images/vinyl-player-igla2.png?url"
-          alt="Igła"
-          class="absolute top-0 right-0 h-[100vh] w-auto pointer-events-none transform z-99"
-        />
-        <!-- Obracający się winyl -->
-        <img
-          src="~/assets/images/vinyl.png?url"
-          alt="Vinyl"
-          class="absolute top-0 right-0 h-[100vh] -translate-x-1/6 w-auto pointer-events-none spin-slow transform z-30"
+          src="/assets/images/scroll-down-icon.svg"
+          alt="Scroll Down Icon"
+          class="h-[36px] w-auto animate-bounce"
         />
       </div>
     </main>
 
     <!-- Most Popular Products Carousel Section -->
-    <section class="bg-[#2A2A2A] py-16 px-8">
+    <section class="bg-[#2A2A2A] px-4 sm:px-8 py-16">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-4xl font-bold text-white text-center mb-12">
           Most Popular Products
@@ -64,24 +69,21 @@
         </div>
 
         <!-- Carousel Container -->
-        <div v-else class="relative overflow-hidden">
+        <div v-else class="relative">
           <div
-            class="flex transition-transform duration-500 ease-in-out"
-            :style="{
-              transform: `translateX(-${currentSlide * (itemWidth + 20)}px)`,
-            }"
+            class="flex space-x-6 scrollbar-hide snap-x snap-mandatory px-2 overflow-x-auto"
           >
             <div
               v-for="product in popularProducts"
               :key="product.id"
-              class="flex-shrink-0 w-80 mr-5 bg-[#3A3A3A] rounded-lg overflow-hidden border border-[#4A4A4A] hover:border-[#633131] transition-all duration-300 hover:transform hover:scale-105"
+              class="flex-shrink-0 w-64 sm:w-72 md:w-80 snap-start bg-[#3A3A3A] rounded-lg overflow-hidden border border-[#4A4A4A] transition duration-100 hover:bg-[#363636]"
             >
               <NuxtLink
                 :to="`/product/${slugify(
                   product.id + '-' + product.name + '-' + product.category
                 )}`"
               >
-                <!-- Product Image - Full width and height -->
+                <!-- Product Image -->
                 <div class="w-full aspect-square overflow-hidden">
                   <img
                     :src="product.image || '/placeholder-vinyl.jpg'"
@@ -91,13 +93,15 @@
                 </div>
 
                 <!-- Product Details -->
-                <div class="p-6">
-                  <h3 class="text-white font-semibold text-lg mb-2">
+                <div class="p-4 sm:p-6">
+                  <h3 class="text-white font-semibold text-lg mb-1">
                     {{ product.name }} |
                     <span class="capitalize">{{ product.category }}</span>
                   </h3>
-                  <p class="text-[#c1c1c1] mb-3">{{ product.artist }}</p>
-                  <p class="text-[#ffffff] font-bold text-xl">
+                  <p class="text-[#c1c1c1] mb-2 text-sm sm:text-base">
+                    {{ product.artist }}
+                  </p>
+                  <p class="text-[#ffffff] font-bold text-lg sm:text-xl">
                     ${{ product.price }}
                   </p>
                 </div>
@@ -105,59 +109,42 @@
             </div>
           </div>
 
-          <!-- Carousel Navigation -->
+          <!-- Optional Navigation Buttons (desktop only) -->
           <button
-            @click="previousSlide"
-            :disabled="currentSlide === 0"
-            class="cursor-pointer absolute left-0 top-1/2 transform -translate-y-1/2 bg-[#633131] hover:bg-[#582c2c] disabled:bg-[#444] disabled:cursor-not-allowed text-white p-3 rounded-full transition"
+            @click="scrollLeft"
+            class="flex absolute left-0 top-1/2 transform -translate-y-1/2 bg-[#1D1616] hover:bg-[#2c2222] text-white p-3 rounded-full transition cursor-pointer"
           >
             <ChevronLeft />
           </button>
           <button
-            @click="nextSlide"
-            :disabled="currentSlide >= maxSlides"
-            class="cursor-pointer absolute right-0 top-1/2 transform -translate-y-1/2 bg-[#633131] hover:bg-[#582c2c] disabled:bg-[#444] disabled:cursor-not-allowed text-white p-3 rounded-full transition"
+            @click="scrollRight"
+            class="flex absolute right-0 top-1/2 transform -translate-y-1/2 bg-[#1D1616] hover:bg-[#2c2222] text-white p-3 rounded-full transition cursor-pointer"
           >
             <ChevronRight />
           </button>
-        </div>
-
-        <!-- Carousel Dots -->
-        <div
-          v-if="popularProducts.length"
-          class="flex justify-center mt-8 space-x-2"
-        >
-          <button
-            v-for="(dot, index) in Math.ceil(
-              popularProducts.length / itemsPerView
-            )"
-            :key="index"
-            @click="goToSlide(index)"
-            :class="[
-              'cursor-pointer w-3 h-3 rounded-full transition-colors',
-              currentSlide === index ? 'bg-[#633131]' : 'bg-[#4A4A4A]',
-            ]"
-          ></button>
         </div>
       </div>
     </section>
 
     <!-- Product Categories Section -->
-    <section class="bg-[#1D1616] py-16 px-8">
-      <div class="max-w-7xl mx-auto">
+    <!-- Product Categories Section -->
+    <section
+      class="bg-[#1D1616] py-16 flex flex-col justify-center px-4 sm:px-8"
+    >
+      <div class="max-w-[1400px] mx-auto w-full">
         <h2 class="text-4xl font-bold text-white text-center mb-12">
           Shop by Category
         </h2>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div
             v-for="category in categories"
             :key="category.id"
-            class="group cursor-pointer"
+            class="group cursor-pointer w-full"
           >
             <NuxtLink :to="`/products/${category.link}`">
               <div
-                class="relative aspect-square rounded-lg overflow-hidden border-2 border-[#633131] hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-[#633131]/20"
+                class="relative w-full aspect-square rounded-lg overflow-hidden border-2 border-[#633131] hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-[#633131]/20"
               >
                 <!-- Background image -->
                 <img
@@ -195,7 +182,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted } from "vue";
 import { ChevronRight, ChevronLeft } from "lucide-vue-next";
 
 const categories = ref([
@@ -228,71 +215,47 @@ const categories = ref([
   },
   {
     id: 4,
-    name: "Other Products",
+    name: "All products",
     link: "",
     img: "gramophone.jpg",
     icon: "🎧",
-    description: "Accessories & equipment",
+    description: "Browse our entire catalog",
     count: 189,
   },
 ]);
 
+const popularProducts = ref([]);
+
+const carouselContainer = ref(null);
+
+const scrollLeft = () => {
+  if (carouselContainer.value) {
+    carouselContainer.value.scrollBy({ left: -300, behavior: "smooth" });
+  }
+};
+
+const scrollRight = () => {
+  if (carouselContainer.value) {
+    carouselContainer.value.scrollBy({ left: 300, behavior: "smooth" });
+  }
+};
+
+onMounted(() => {
+  carouselContainer.value = document.querySelector(".overflow-x-auto");
+});
+
 const { data: db_products } = await useFetch("/api/products");
 
 const allProducts = db_products.value?.products || [];
-const popularProducts = ref(
-  allProducts.filter((product) => product.id >= 1 && product.id <= 8) // więcej, żeby było co przesuwać
-);
-
-const currentSlide = ref(0);
-const itemsPerView = ref(1); // domyślnie 1 (na mobile)
-const itemWidth = 320; // szerokość karty w px (dostosuj do designu)
-
-// Funkcja ustalająca ilość produktów na ekran w zależności od width
-const updateItemsPerView = () => {
-  const width = window.innerWidth;
-  if (width < 640) {
-    itemsPerView.value = 1; // telefony
-  } else if (width < 1024) {
-    itemsPerView.value = 2; // tablety
-  } else if (width < 1440) {
-    itemsPerView.value = 3; // mniejsze laptopy
-  } else {
-    itemsPerView.value = 5; // duże ekrany
-  }
-};
-
-// obliczanie max slajdów
-const maxSlides = computed(() => {
-  return Math.max(
-    0,
-    Math.ceil(popularProducts.value.length / itemsPerView.value) - 1
-  );
-});
-
-// przesuwanie karuzeli
-const nextSlide = () => {
-  if (currentSlide.value < maxSlides.value) {
-    currentSlide.value++;
-  }
-};
-const previousSlide = () => {
-  if (currentSlide.value > 0) {
-    currentSlide.value--;
-  }
-};
-const goToSlide = (index) => {
-  currentSlide.value = index;
-};
-
-// listener resize
-onMounted(() => {
-  updateItemsPerView();
-  window.addEventListener("resize", updateItemsPerView);
-});
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", updateItemsPerView);
-});
+popularProducts.value = [
+  allProducts[0],
+  allProducts[3],
+  allProducts[5],
+  allProducts[7],
+  allProducts[9],
+  allProducts[12],
+  allProducts[15],
+];
 
 const slugify = (text) =>
   text
