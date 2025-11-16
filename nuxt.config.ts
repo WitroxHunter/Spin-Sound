@@ -9,8 +9,15 @@ export default defineNuxtConfig({
   routeRules: {
     "/products": { redirect: "/products/all" },
   },
+
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
   vite: { plugins: [tailwindcss()] },
+  app: {
+    head: {
+      title: "Spin'n Sound",
+      meta: [{ name: "description", content: "Spin'n Sound — music store" }],
+    },
+  },
 });
