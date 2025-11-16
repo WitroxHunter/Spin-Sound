@@ -7,10 +7,8 @@ export const useAuth = () => {
   }
 
   async function logout() {
-    // Usuń wartość
     token.value = null;
 
-    // Upewnij się, że przeglądarka skasuje ciasteczko
     if (import.meta.client) {
       document.cookie = "auth_token=; Max-Age=0; path=/; SameSite=Lax";
       window.location.reload();

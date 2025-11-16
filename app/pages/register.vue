@@ -150,13 +150,11 @@
               class="text-sm text-[#c1c1c1] group-hover:text-white transition"
             >
               I agree to the
-              <a href="/terms" class="text-[#633131] hover:underline font-bold"
+              <a href="/about" class="text-[#633131] hover:underline font-bold"
                 >Terms of Service</a
               >
               and
-              <a
-                href="/privacy"
-                class="text-[#633131] hover:underline font-bold"
+              <a href="/about" class="text-[#633131] hover:underline font-bold"
                 >Privacy Policy</a
               >
             </span>

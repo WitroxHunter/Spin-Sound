@@ -4,7 +4,7 @@ import { Transition } from "vue";
 
 const props = defineProps({
   message: { type: String, required: true },
-  duration: { type: Number, default: 3000 }, // czas wyświetlania w ms
+  duration: { type: Number, default: 3000 },
   show: { type: Boolean, default: false },
 });
 

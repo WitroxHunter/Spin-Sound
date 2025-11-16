@@ -78,7 +78,6 @@
     <section class="flex-1 p-8">
       <h1 class="text-4xl font-bold mb-4">{{ displayTitle }}</h1>
 
-      <!-- Sorting and Pagination Controls -->
       <div class="flex items-center gap-6 mb-8 p-4 bg-[#2A1F1F] rounded-lg">
         <div class="flex items-center gap-2">
           <label class="text-sm font-medium">Sort by:</label>
@@ -138,7 +137,6 @@
         </div>
       </div>
 
-      <!-- Pagination -->
       <div
         v-if="totalPages > 1"
         class="flex justify-center items-center gap-4 mt-8"
@@ -205,19 +203,7 @@ const sortBy = ref("name-asc");
 const itemsPerPage = ref(12);
 const currentPage = ref(1);
 
-// Available genres
-const genres = ref([
-  "Hip Hop",
-  "Rock",
-  "Jazz",
-  "Pop",
-  "Electronic",
-  "Classical",
-  "R&B",
-  "Country",
-  "Reggae",
-  "Blues",
-]);
+const genres = ref(["Hip Hop", "Rock", "Jazz", "Electronic"]);
 
 const toggleCategory = (category) => {
   if (expandedCategory.value === category) {
@@ -337,7 +323,6 @@ const visiblePages = computed(() => {
   return pages;
 });
 
-// Initialize from URL params (for genre-specific pages)
 onMounted(() => {
   const category = route.params.category;
   const genreParam = route.params.genre;
@@ -347,27 +332,21 @@ onMounted(() => {
     expandedCategory.value = category;
 
     if (genreParam) {
-      // Convert URL-friendly genre back to display format
       const displayGenre = genreParam
         .split("-")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
 
-      // Check if this is a valid genre
       if (genres.value.includes(displayGenre)) {
         selectedGenre.value = displayGenre;
       } else {
-        // If invalid genre, redirect to category page
         navigateTo(`/products/${category}`);
       }
     }
   } else {
-    // If invalid category, redirect to all products
     navigateTo("/products");
   }
 });
-
-// Reset to first page when filters change
 watch([selectedCategory, selectedGenre, sortBy, itemsPerPage], () => {
   currentPage.value = 1;
 });

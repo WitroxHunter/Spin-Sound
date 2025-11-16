@@ -1,7 +1,6 @@
 <template>
   <div class="h-16 w-screen bg-[#241B1B]"></div>
 
-  <!-- Mobile Filter Header -->
   <div class="md:hidden bg-[#241B1B] border-b border-[#333] p-4">
     <button
       @click="mobileFilterOpen = !mobileFilterOpen"
@@ -23,7 +22,6 @@
           : 'hidden md:block',
       ]"
     >
-      <!-- Mobile Close Button -->
       <div class="flex justify-end md:hidden mb-4">
         <button
           @click="mobileFilterOpen = false"
@@ -113,7 +111,6 @@
     <section class="flex-1 p-8">
       <h1 class="text-4xl font-bold mb-4">{{ displayTitle }}</h1>
 
-      <!-- Sorting and Pagination Controls -->
       <div class="flex items-center gap-6 mb-8 p-4 bg-[#2A1F1F] rounded-lg">
         <div class="flex items-center gap-2">
           <select
@@ -194,7 +191,6 @@
         </div>
       </div>
 
-      <!-- Pagination -->
       <div
         v-if="totalPages > 1"
         class="flex justify-center items-center gap-4 mt-8"
@@ -277,11 +273,6 @@ const itemsPerPage = ref(12);
 const currentPage = ref(1);
 const genres = ref(["Hip Hop", "Rock", "Jazz", "Electronic"]);
 
-const toggleCategory = (category) => {
-  expandedCategory.value =
-    expandedCategory.value === category ? null : category;
-};
-
 const handleCategoryClickMobile = (category) => {
   expandedCategory.value =
     expandedCategory.value === category ? null : category;
@@ -315,8 +306,6 @@ const handleMerchClickMobile = () => {
   currentPage.value = 1;
   navigateTo("/products/merch");
 };
-
-// pozostałe funkcje handleCategoryClick, filterCategory itd. pozostają bez zmian
 
 const displayTitle = computed(() => {
   if (selectedCategory.value === "all") return "All Products";

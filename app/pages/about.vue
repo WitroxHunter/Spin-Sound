@@ -30,7 +30,3 @@
     </div>
   </main>
 </template>
-
-<script setup>
-// This is a static info page, no logic required.
-</script>

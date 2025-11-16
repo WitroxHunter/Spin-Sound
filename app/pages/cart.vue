@@ -1,7 +1,6 @@
 <template>
   <div class="bg-[#1D1616] min-h-screen pt-16">
     <div class="max-w-7xl mx-auto px-8 py-12">
-      <!-- Loading State -->
       <div v-if="isLoading" class="text-center py-20">
         <div
           class="bg-[#2A2A2A] rounded-lg p-12 border border-[#4A4A4A] max-w-md mx-auto"
@@ -12,7 +11,6 @@
         </div>
       </div>
 
-      <!-- Empty Cart -->
       <div v-else-if="cartItems.length === 0" class="text-center py-20">
         <div
           class="bg-[#2A2A2A] rounded-lg p-12 border border-[#4A4A4A] max-w-md mx-auto"
@@ -32,9 +30,7 @@
         </div>
       </div>
 
-      <!-- Cart with Items -->
       <div v-else class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Cart Items List -->
         <div class="lg:col-span-2 space-y-4">
           <div
             v-for="item in cartItems"
@@ -42,7 +38,6 @@
             class="bg-[#2A2A2A] rounded-lg p-6 border border-[#4A4A4A] hover:border-[#633131] transition"
           >
             <div class="flex gap-6">
-              <!-- Product Image -->
               <div
                 class="w-32 h-32 flex-shrink-0 bg-[#3A3A3A] rounded-lg overflow-hidden"
               >
@@ -53,7 +48,6 @@
                 />
               </div>
 
-              <!-- Product Details -->
               <div class="flex-grow">
                 <div class="flex justify-between items-start mb-2">
                   <div>
@@ -74,7 +68,6 @@
                   </button>
                 </div>
 
-                <!-- Quantity Controls -->
                 <div class="flex items-center justify-between mt-4">
                   <div
                     class="flex items-center gap-3 bg-[#3A3A3A] rounded-lg p-1"
@@ -108,14 +101,11 @@
           </div>
         </div>
 
-        <!-- Order Summary Sidebar -->
         <div class="lg:col-span-1">
           <div
             class="bg-[#2A2A2A] rounded-lg p-6 border border-[#4A4A4A] sticky top-8"
           >
             <h2 class="text-2xl font-bold text-white mb-6">Order Summary</h2>
-
-            <!-- Price Breakdown -->
             <div class="space-y-4 mb-6">
               <div class="flex justify-between text-[#c1c1c1]">
                 <span>Subtotal ({{ totalItems }} items)</span>
@@ -139,7 +129,6 @@
               </div>
             </div>
 
-            <!-- Promo Code -->
             <div class="mb-6">
               <div class="flex gap-2">
                 <input
@@ -157,7 +146,6 @@
               </div>
             </div>
 
-            <!-- Checkout Button -->
             <button
               @click="proceedToCheckout"
               class="w-full py-4 bg-[#633131] hover:bg-[#582c2c] text-white font-semibold rounded-lg transition mb-4 flex items-center justify-center gap-2"
@@ -189,9 +177,7 @@ import {
 import { useCart } from "#imports";
 
 const { fetchCart, removeFromCart, decrementItem, addToCart } = useCart();
-const token = useCookie("auth_token");
 
-// Loading cart
 const cartItems = ref([]);
 const isLoading = ref(true);
 
@@ -206,7 +192,6 @@ onMounted(async () => {
   }
 });
 
-// Calculations
 const promoCode = ref("");
 
 const totalItems = computed(() =>

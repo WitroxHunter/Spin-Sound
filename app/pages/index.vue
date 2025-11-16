@@ -56,7 +56,7 @@
       </div>
     </main>
 
-    <!-- Most Popular Products Carousel Section -->
+    <!-- Most Popular Products -->
     <section class="bg-[#2A2A2A] px-4 sm:px-8 py-16">
       <div class="max-w-7xl mx-auto">
         <h2 class="text-4xl font-bold text-white text-center mb-12">
@@ -109,7 +109,7 @@
             </div>
           </div>
 
-          <!-- Optional Navigation Buttons (desktop only) -->
+          <!-- Navigation Buttons -->
           <button
             @click="scrollLeft"
             class="flex absolute left-0 top-1/2 transform -translate-y-1/2 bg-[#1D1616] hover:bg-[#2c2222] text-white p-3 rounded-full transition cursor-pointer"
@@ -126,7 +126,6 @@
       </div>
     </section>
 
-    <!-- Product Categories Section -->
     <!-- Product Categories Section -->
     <section
       class="bg-[#1D1616] py-16 flex flex-col justify-center px-4 sm:px-8"
@@ -146,19 +145,16 @@
               <div
                 class="relative w-full aspect-square rounded-lg overflow-hidden border-2 border-[#633131] hover:scale-105 transition-all duration-300 hover:shadow-2xl hover:shadow-[#633131]/20"
               >
-                <!-- Background image -->
                 <img
                   :src="`/images/${category.img}`"
                   :alt="category.name"
                   class="absolute inset-0 w-full h-full object-cover"
                 />
 
-                <!-- Gradient overlay -->
                 <div
                   class="absolute inset-0 bg-gradient-to-b from-[#633131]/70 to-[#1d1616]/90"
                 ></div>
 
-                <!-- Text content at the bottom -->
                 <div class="absolute bottom-0 w-full p-4 text-center">
                   <h3 class="text-white font-semibold text-xl">
                     {{ category.name }}

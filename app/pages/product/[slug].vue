@@ -13,16 +13,14 @@ const { data: product } = await useFetch(`/api/product/${id}`);
 const token = useCookie("auth_token");
 const { addToCart } = useCart();
 
-// Reactive state
 const quantity = ref(1);
 const selectedImage = ref(0);
 const isWishlisted = ref(false);
 
-// Mock additional images (you can replace with real data)
 const additionalImages = ref([
   product.value?.image,
-  product.value?.image, // Could be back cover
-  product.value?.image, // Could be detail shots
+  product.value?.image,
+  product.value?.image,
 ]);
 
 const increaseQuantity = () => {
@@ -40,7 +38,6 @@ const toggleWishlist = () => {
 };
 
 const shareProduct = () => {
-  // Share functionality
   if (navigator.share) {
     navigator.share({
       title: product.value.name,
@@ -89,7 +86,6 @@ async function proceedToCheckout() {
 <template>
   <div class="bg-[#1D1616] min-h-screen text-white pt-16">
     <div v-if="product" class="max-w-7xl mx-auto px-4 py-8">
-      <!-- Breadcrumb -->
       <nav class="text-sm text-[#c1c1c1] mb-8">
         <NuxtLink to="/" class="hover:text-white">Home</NuxtLink>
         <span class="mx-2">/</span>
@@ -105,9 +101,7 @@ async function proceedToCheckout() {
       </nav>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <!-- Product Images -->
         <div class="space-y-4">
-          <!-- Main Image -->
           <div
             class="bg-[#2A2A2A] rounded-lg overflow-hidden border border-[#4A4A4A]"
           >
@@ -118,7 +112,6 @@ async function proceedToCheckout() {
             />
           </div>
 
-          <!-- Thumbnail Images -->
           <div class="flex gap-2 overflow-x-auto">
             <button
               v-for="(image, index) in additionalImages.filter((img) => img)"
@@ -140,9 +133,7 @@ async function proceedToCheckout() {
           </div>
         </div>
 
-        <!-- Product Details -->
         <div class="space-y-6">
-          <!-- Category Badge -->
           <div class="inline-flex">
             <span
               class="bg-[#633131] text-white px-3 py-1 rounded-full text-sm font-medium capitalize"
@@ -151,7 +142,6 @@ async function proceedToCheckout() {
             </span>
           </div>
 
-          <!-- Product Title -->
           <div>
             <h1 class="text-4xl lg:text-5xl font-bold mb-2">
               {{ product.name }}
@@ -159,7 +149,6 @@ async function proceedToCheckout() {
             <p class="text-xl text-[#c1c1c1]">by {{ product.artist }}</p>
           </div>
 
-          <!-- Rating (Mock - you can replace with real data) -->
           <div class="flex items-center gap-2">
             <div class="flex">
               <Star
@@ -174,12 +163,10 @@ async function proceedToCheckout() {
             <span class="text-[#c1c1c1]">(4.0) • 127 reviews</span>
           </div>
 
-          <!-- Price -->
           <div class="text-3xl font-bold text-[#633131]">
             ${{ product.price }}
           </div>
 
-          <!-- Quantity Selector -->
           <div class="flex items-center gap-4">
             <span class="text-lg">Quantity:</span>
             <div class="flex items-center border border-[#4A4A4A] rounded-lg">
@@ -202,7 +189,6 @@ async function proceedToCheckout() {
             </div>
           </div>
 
-          <!-- Action Buttons -->
           <div class="flex flex-col sm:flex-row gap-4">
             <button
               @click="handleAddToCart(product, quantity)"
@@ -219,7 +205,6 @@ async function proceedToCheckout() {
             </button>
           </div>
 
-          <!-- Secondary Actions -->
           <div class="flex gap-4">
             <button
               @click="toggleWishlist"
@@ -245,9 +230,7 @@ async function proceedToCheckout() {
             </button>
           </div>
 
-          <!-- Product Details Tabs/Sections -->
           <div class="space-y-6 pt-6 border-t border-[#4A4A4A]">
-            <!-- Description -->
             <div>
               <h3 class="text-xl font-semibold mb-3">Description</h3>
               <p class="text-[#c1c1c1] leading-relaxed">
@@ -258,7 +241,6 @@ async function proceedToCheckout() {
               </p>
             </div>
 
-            <!-- Specifications -->
             <div>
               <h3 class="text-xl font-semibold mb-3">Details</h3>
               <div class="grid grid-cols-2 gap-4 text-sm">
@@ -289,7 +271,6 @@ async function proceedToCheckout() {
               </div>
             </div>
 
-            <!-- Shipping Info -->
             <div>
               <h3 class="text-xl font-semibold mb-3">Shipping & Returns</h3>
               <div class="text-[#c1c1c1] space-y-2 text-sm">
@@ -304,11 +285,9 @@ async function proceedToCheckout() {
         </div>
       </div>
 
-      <!-- Related Products Section -->
       <div class="mt-16">
         <h2 class="text-3xl font-bold mb-8">You Might Also Like</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <!-- Mock related products - replace with real data -->
           <div
             v-for="i in 4"
             :key="i"
@@ -333,7 +312,6 @@ async function proceedToCheckout() {
       </div>
     </div>
 
-    <!-- Loading State -->
     <div v-else class="flex items-center justify-center min-h-screen">
       <div class="text-center">
         <div
