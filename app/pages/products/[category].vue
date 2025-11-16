@@ -239,6 +239,8 @@ import Popup from "@/components/Popup.vue";
 import { useCart } from "#imports";
 import { Menu, X } from "lucide-vue-next";
 
+useHead({ title: "Products | SpinnSound" });
+
 const { addToCart } = useCart();
 
 const mobileFilterOpen = ref(false);

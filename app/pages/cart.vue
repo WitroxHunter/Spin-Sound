@@ -176,6 +176,8 @@ import {
 } from "lucide-vue-next";
 import { useCart } from "#imports";
 
+useHead({ title: "Cart | SpinnSound" });
+
 const { fetchCart, removeFromCart, decrementItem, addToCart } = useCart();
 
 const cartItems = ref([]);

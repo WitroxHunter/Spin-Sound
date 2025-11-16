@@ -276,4 +276,6 @@ const onSubmit = async () => {
     komunikat.value = "❌ " + (err.message || "Registration failed");
   }
 };
+
+useHead({ title: "Register | SpinnSound" });
 </script>

@@ -196,4 +196,6 @@ const onSubmit = async () => {
     komunikat.value = "❌ Login failed";
   }
 };
+
+useHead({ title: "Login | SpinnSound" });
 </script>
